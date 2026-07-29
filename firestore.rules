@@ -1,0 +1,64 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Only two roles exist in this app: teacher and principal.
+    // No student- or parent-facing login is planned, so every rule
+    // below assumes the caller is signed in as staff.
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isPrincipal() {
+      return isSignedIn() && userRole() == 'principal';
+    }
+
+    function isTeacher() {
+      return isSignedIn() && userRole() == 'teacher';
+    }
+
+    // users/{uid} — profile written once at signup, only the owner
+    // (or nobody, since role can't be self-elevated after creation)
+    // can update it afterwards.
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == uid
+                    && request.resource.data.role in ['teacher', 'principal'];
+      allow update: if isSignedIn() && request.auth.uid == uid
+                    // role can't be changed after account creation
+                    && request.resource.data.role == resource.data.role;
+      allow delete: if false;
+    }
+
+    // students/{id} — read by any signed-in staff member; writes
+    // limited to principals until a proper "add student" screen exists.
+    match /students/{id} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // flags/{id} — teachers create flags for students they observe;
+    // any signed-in staff member can read (principals need to see all
+    // of them, and teachers need their own history); only the fields
+    // a principal sets (status, interventionType) can be updated after
+    // creation, and only by a principal.
+    match /flags/{id} {
+      allow read: if isSignedIn();
+
+      allow create: if isTeacher()
+                    && request.resource.data.teacherUid == request.auth.uid
+                    && request.resource.data.status == 'reported';
+
+      allow update: if isPrincipal()
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                       .hasOnly(['status', 'interventionType']);
+
+      allow delete: if false;
+    }
+  }
+}

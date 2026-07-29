@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function underSizeLimit() {
+      // 5MB cap per photo
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+
+    // profile_photos/{uid}.jpg — a user can only overwrite their own
+    // profile photo; any signed-in staff member can view any photo
+    // (dashboards show other people's photos, e.g. a student's).
+    match /profile_photos/{uid}.jpg {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == uid
+                   && isImage() && underSizeLimit();
+    }
+
+    // student_photos/{studentId}.jpg — any signed-in staff member can
+    // read; writes are intentionally open to any signed-in user for now
+    // since there's no in-app way yet to check "is this uid a principal"
+    // from a Storage rule without an extra Firestore lookup — tighten
+    // this once that's worth the complexity.
+    match /student_photos/{studentId}.jpg {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isImage() && underSizeLimit();
+    }
+  }
+}
