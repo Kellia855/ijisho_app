@@ -54,33 +54,35 @@ class AppBottomNav extends ConsumerWidget {
           children: List.generate(items.length, (index) {
             final item = items[index];
             final isActive = index == currentIndex;
-            return GestureDetector(
-              onTap: () => onTap(index),
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: isActive ? activeColor : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      item.icon,
-                      size: 20,
-                      color: isActive ? Colors.white : AppColors.textMuted,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      t(item.label, language),
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => onTap(index),
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isActive ? activeColor : Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        item.icon,
+                        size: 20,
                         color: isActive ? Colors.white : AppColors.textMuted,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 2),
+                      Text(
+                        t(item.label, language),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: isActive ? Colors.white : AppColors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

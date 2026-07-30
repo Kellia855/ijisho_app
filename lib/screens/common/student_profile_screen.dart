@@ -183,6 +183,7 @@ class StudentProfileScreen extends ConsumerWidget {
                 context,
                 teacherUid: viewer.uid,
                 teacherName: viewer.fullName,
+                schoolName: viewer.schoolName,
                 preselectedStudent: student,
               ),
               icon: const Icon(Icons.add, color: Colors.white),

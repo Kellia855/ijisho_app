@@ -1,6 +1,22 @@
 {
   "indexes": [
     {
+      "collectionGroup": "students",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "schoolName", "order": "ASCENDING" },
+        { "fieldPath": "fullName", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "flags",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "schoolName", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "flags",
       "queryScope": "COLLECTION",
       "fields": [

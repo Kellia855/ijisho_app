@@ -14,7 +14,8 @@ import '../../theme/app_theme.dart';
 /// (no attendance-taking feature exists) so they use clearly-labeled
 /// sample data — swap these once that pipeline exists.
 class AnalyticsScreen extends ConsumerWidget {
-  const AnalyticsScreen({super.key});
+  final String? schoolName;
+  const AnalyticsScreen({super.key, this.schoolName});
 
   // Sample data — see note above.
   static const _sampleAttendance = [98.2, 94.5, 91.0, 92.5, 93.8, 90.1, 96.0];
@@ -22,7 +23,7 @@ class AnalyticsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final flagsAsync = ref.watch(allFlagsStreamProvider);
+    final flagsAsync = ref.watch(allFlagsStreamProvider(schoolName));
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,

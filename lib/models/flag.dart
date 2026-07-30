@@ -156,6 +156,7 @@ class StudentFlag {
   final int flagCountThisTerm; // for the "3rd flag this term" repeat badge
   final String? interventionType;
   final String? studentPhotoUrl;
+  final String? schoolName;
 
   const StudentFlag({
     required this.id,
@@ -171,6 +172,7 @@ class StudentFlag {
     this.flagCountThisTerm = 1,
     this.interventionType,
     this.studentPhotoUrl,
+    this.schoolName,
   });
 
   Map<String, dynamic> toMap() {
@@ -185,8 +187,9 @@ class StudentFlag {
       'teacherUid': teacherUid,
       'createdAt': Timestamp.fromDate(createdAt),
       'flagCountThisTerm': flagCountThisTerm,
-      if (interventionType != null) 'interventionType': interventionType,
-      if (studentPhotoUrl != null) 'studentPhotoUrl': studentPhotoUrl,
+      'interventionType': ?interventionType,
+      'studentPhotoUrl': ?studentPhotoUrl,
+      'schoolName': ?schoolName,
     };
   }
 
@@ -206,6 +209,7 @@ class StudentFlag {
       flagCountThisTerm: (data['flagCountThisTerm'] as num?)?.toInt() ?? 1,
       interventionType: data['interventionType'] as String?,
       studentPhotoUrl: data['studentPhotoUrl'] as String?,
+      schoolName: data['schoolName'] as String?,
     );
   }
 }

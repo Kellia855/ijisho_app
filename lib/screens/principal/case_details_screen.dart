@@ -130,7 +130,7 @@ class CaseDetailsScreen extends StatelessWidget {
                                       size: 12, color: AppColors.textMuted),
                                   const SizedBox(width: 4),
                                   Text(
-                                    DateFormat('yyyyMMdd').format(flag.createdAt),
+                                    DateFormat('MMM d, yyyy').format(flag.createdAt),
                                     style: const TextStyle(
                                         fontSize: 11, color: AppColors.textMuted),
                                   ),

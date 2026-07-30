@@ -14,6 +14,7 @@ import '../../theme/app_theme.dart';
 class LogIssueSheet extends ConsumerStatefulWidget {
   final String teacherUid;
   final String teacherName;
+  final String? schoolName;
   final Student? preselectedStudent;
   final FlagCategory? preselectedCategory;
 
@@ -21,6 +22,7 @@ class LogIssueSheet extends ConsumerStatefulWidget {
     super.key,
     required this.teacherUid,
     required this.teacherName,
+    this.schoolName,
     this.preselectedStudent,
     this.preselectedCategory,
   });
@@ -29,6 +31,7 @@ class LogIssueSheet extends ConsumerStatefulWidget {
     BuildContext context, {
     required String teacherUid,
     required String teacherName,
+    String? schoolName,
     Student? preselectedStudent,
     FlagCategory? preselectedCategory,
   }) {
@@ -39,6 +42,7 @@ class LogIssueSheet extends ConsumerStatefulWidget {
       builder: (_) => LogIssueSheet(
         teacherUid: teacherUid,
         teacherName: teacherName,
+        schoolName: schoolName,
         preselectedStudent: preselectedStudent,
         preselectedCategory: preselectedCategory,
       ),
@@ -101,6 +105,7 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
               teacherUid: widget.teacherUid,
               createdAt: DateTime.now(),
               studentPhotoUrl: _selectedStudent!.photoUrl,
+              schoolName: widget.schoolName,
             ),
           );
       if (mounted) Navigator.of(context).pop();
@@ -117,7 +122,7 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final studentsAsync = ref.watch(studentsStreamProvider);
+    final studentsAsync = ref.watch(studentsStreamProvider(widget.schoolName));
 
     return DraggableScrollableSheet(
       initialChildSize: 0.7,

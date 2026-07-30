@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,6 +6,7 @@ import '../models/app_user.dart';
 import '../providers/service_providers.dart';
 import '../services/auth_service.dart';
 import '../theme/app_theme.dart';
+import 'google_role_picker_screen.dart';
 import 'signup_screen.dart';
 import 'principal/principal_home_screen.dart';
 import 'teacher/teacher_home_screen.dart';
@@ -34,6 +36,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() {
+      _isLoading = true;
+      _errorText = null;
+    });
+    try {
+      final appUser = await ref.read(authServiceProvider).signInWithGoogle();
+      if (!mounted) return;
+      if (appUser == null) {
+        // null means either cancelled or new user needing role selection
+        // Check if Firebase has a current user to distinguish the two cases
+        final hasFirebaseUser = ref.read(authServiceProvider).currentUser != null;
+        if (!hasFirebaseUser) return; // cancelled — do nothing
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const GoogleRolePickerScreen()),
+        );
+        return;
+      }
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => appUser.role == UserRole.teacher
+              ? TeacherHomeScreen(user: appUser)
+              : PrincipalHomeScreen(user: appUser),
+        ),
+        (route) => false,
+      );
+    } catch (e) {
+      setState(() => _errorText = AuthService.friendlyError(e));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _handleLogin() async {
@@ -198,6 +233,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                               )
                             : const Text('Login'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text('OR',
+                              style: TextStyle(
+                                  fontSize: 12, color: AppColors.textMuted)),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: OutlinedButton(
+                        onPressed: _isLoading ? null : _handleGoogleSignIn,
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFFDDDDDD)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const FaIcon(FontAwesomeIcons.google,
+                                size: 18, color: Color(0xFF4285F4)),
+                            const SizedBox(width: 10),
+                            const Flexible(
+                              child: Text(
+                                'Sign in with Google',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: AppColors.textDark,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
