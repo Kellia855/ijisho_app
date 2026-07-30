@@ -19,8 +19,9 @@ import 'case_details_screen.dart';
 /// second tab for reference.
 class InterventionScreen extends ConsumerStatefulWidget {
   final AppUser user;
+  final String? schoolName;
 
-  const InterventionScreen({super.key, required this.user});
+  const InterventionScreen({super.key, required this.user, this.schoolName});
 
   @override
   ConsumerState<InterventionScreen> createState() => _InterventionScreenState();
@@ -58,7 +59,7 @@ class _InterventionScreenState extends ConsumerState<InterventionScreen>
 
   @override
   Widget build(BuildContext context) {
-    final flagsAsync = ref.watch(allFlagsStreamProvider);
+    final flagsAsync = ref.watch(allFlagsStreamProvider(widget.user.schoolName));
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,

@@ -25,11 +25,8 @@ class AppUser {
   final String email;
   final UserRole role;
 
-  // Teacher-only field
   final String? employeeId;
-
-  // Principal-only field
-  final String? schoolName;
+  final String? schoolName; // both teacher and principal
 
   final String? photoUrl;
 
@@ -60,9 +57,9 @@ class AppUser {
       'fullName': fullName,
       'email': email,
       'role': role.firestoreValue,
-      if (employeeId != null) 'employeeId': employeeId,
-      if (schoolName != null) 'schoolName': schoolName,
-      if (photoUrl != null) 'photoUrl': photoUrl,
+      'employeeId': ?employeeId,
+      'schoolName': ?schoolName,
+      'photoUrl': ?photoUrl,
     };
   }
 

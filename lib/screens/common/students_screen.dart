@@ -75,7 +75,7 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
   Widget build(BuildContext context) {
     final isPrincipal = widget.user.role == UserRole.principal;
     final accent = isPrincipal ? AppColors.principalPurple : AppColors.teacherGreen;
-    final studentsAsync = ref.watch(studentsStreamProvider);
+    final studentsAsync = ref.watch(studentsStreamProvider(widget.user.schoolName));
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
@@ -206,7 +206,7 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
           ? FloatingActionButton(
               backgroundColor: accent,
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const AddStudentScreen()),
+                MaterialPageRoute(builder: (_) => AddStudentScreen(schoolName: widget.user.schoolName)),
               ),
               child: const Icon(Icons.add, color: Colors.white),
             )

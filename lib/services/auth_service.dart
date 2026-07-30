@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/app_user.dart';
 
-/// Thin wrapper around FirebaseAuth + Firestore so screens never talk
-/// to Firebase directly. Keeps auth logic in one testable place.
+/// Thin wrapper around FirebaseAuth + Firestore 
 class AuthService {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   AuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
       : _auth = auth ?? FirebaseAuth.instance,
@@ -20,8 +22,7 @@ class AuthService {
   CollectionReference<Map<String, dynamic>> get _usersRef =>
       _firestore.collection('users');
 
-  /// Signs up a new teacher or principal, then writes their profile
-  /// (including role-specific fields) to Firestore under `users/{uid}`.
+  /// Signs up a new teacher or principal
   Future<AppUser> signUp({
     required String fullName,
     required String email,
@@ -71,16 +72,61 @@ class AuthService {
     return AppUser.fromMap(credential.user!.uid, doc.data()!);
   }
 
-  Future<void> signOut() => _auth.signOut();
+  // Returns null if the user cancelled or is new 
+  Future<AppUser?> signInWithGoogle() async {
+    final googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) return null; // cancelled — not an error
 
-  /// Updates the signed-in user's profile photo URL in Firestore, after
-  /// StorageService has already uploaded the image.
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final userCredential = await _auth.signInWithCredential(credential);
+    final uid = userCredential.user!.uid;
+
+    final doc = await _usersRef.doc(uid).get();
+    if (!doc.exists) return null; 
+
+    return AppUser.fromMap(uid, doc.data()!);
+  }
+
+  Future<AppUser> createGoogleProfile({
+    required UserRole role,
+    String? employeeId,
+    String? schoolName,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'no-current-user',
+        message: 'No signed-in user found. Please sign in again.',
+      );
+    }
+    final data = {
+      'fullName': user.displayName ?? '',
+      'email': user.email ?? '',
+      'role': role.name,
+      'photoUrl': user.photoURL ?? '',
+      'employeeId': ?employeeId,
+      'schoolName': ?schoolName,
+    };
+    await _usersRef.doc(user.uid).set(data);
+    return AppUser.fromMap(user.uid, data);
+  }
+
+  Future<void> signOut() async {
+    await _googleSignIn.signOut();
+    await _auth.signOut();
+  }
+
+  /// Updates the signed-in user's profile photo URL in Firestore
   Future<void> updatePhotoUrl(String uid, String photoUrl) async {
     await _usersRef.doc(uid).update({'photoUrl': photoUrl});
   }
 
-  /// Maps FirebaseAuthException codes to short, user-facing messages
-  /// so screens can show something friendlier than a raw error code.
+ 
   static String friendlyError(Object error) {
     if (error is FirebaseAuthException) {
       switch (error.code) {

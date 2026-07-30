@@ -14,8 +14,9 @@ import '../../theme/app_theme.dart';
 /// keeps the add/edit UI (and its validation) in exactly one place.
 class AddStudentScreen extends ConsumerStatefulWidget {
   final Student? student;
+  final String? schoolName;
 
-  const AddStudentScreen({super.key, this.student});
+  const AddStudentScreen({super.key, this.student, this.schoolName});
 
   bool get isEditing => student != null;
 
@@ -64,6 +65,7 @@ class _AddStudentScreenState extends ConsumerState<AddStudentScreen> {
         id: widget.student?.id ?? '',
         fullName: _nameController.text.trim(),
         gradeSection: _gradeController.text.trim(),
+        schoolName: widget.schoolName ?? widget.student?.schoolName,
       );
 
       final studentId = widget.isEditing

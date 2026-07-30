@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,6 +6,7 @@ import '../models/app_user.dart';
 import '../providers/service_providers.dart';
 import '../services/auth_service.dart';
 import '../theme/app_theme.dart';
+import 'google_role_picker_screen.dart';
 import 'principal/principal_home_screen.dart';
 import 'teacher/teacher_home_screen.dart';
 
@@ -21,6 +23,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _secondaryController = TextEditingController();
+  final _schoolNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
@@ -37,10 +40,42 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   void dispose() {
     _fullNameController.dispose();
     _secondaryController.dispose();
+    _schoolNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleGoogleSignUp() async {
+    setState(() {
+      _isLoading = true;
+      _errorText = null;
+    });
+    try {
+      final appUser = await ref.read(authServiceProvider).signInWithGoogle();
+      if (!mounted) return;
+      if (appUser == null) {
+        final hasFirebaseUser = ref.read(authServiceProvider).currentUser != null;
+        if (!hasFirebaseUser) return; // cancelled — do nothing
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const GoogleRolePickerScreen()),
+        );
+        return;
+      }
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => appUser.role == UserRole.teacher
+              ? TeacherHomeScreen(user: appUser)
+              : PrincipalHomeScreen(user: appUser),
+        ),
+        (route) => false,
+      );
+    } catch (e) {
+      setState(() => _errorText = AuthService.friendlyError(e));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _handleSignup() async {
@@ -63,7 +98,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             password: _passwordController.text,
             role: _isTeacher ? UserRole.teacher : UserRole.principal,
             employeeId: _isTeacher ? _secondaryController.text : null,
-            schoolName: _isTeacher ? null : _secondaryController.text,
+            schoolName: _isTeacher ? _schoolNameController.text : _secondaryController.text,
           );
 
       if (!mounted) return;
@@ -177,6 +212,18 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       validator: _requiredValidator,
                     ),
                     const SizedBox(height: 16),
+                    if (_isTeacher) ...[
+                      _fieldLabel('School Name'),
+                      TextFormField(
+                        controller: _schoolNameController,
+                        decoration: const InputDecoration(
+                          hintText: 'Groupe Scolaire Kigali',
+                          prefixIcon: Icon(Icons.school_outlined),
+                        ),
+                        validator: _requiredValidator,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     _fieldLabel('Work Email Address'),
                     TextFormField(
                       controller: _emailController,
@@ -316,6 +363,47 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   Icon(Icons.arrow_forward, size: 18),
                                 ],
                               ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text('OR',
+                              style: TextStyle(
+                                  fontSize: 12, color: AppColors.textMuted)),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: OutlinedButton(
+                        onPressed: _isLoading ? null : _handleGoogleSignUp,
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFFDDDDDD)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FaIcon(FontAwesomeIcons.google,
+                                size: 18, color: Color(0xFF4285F4)),
+                            SizedBox(width: 10),
+                            Text(
+                              'Sign up with Google',
+                              style: TextStyle(
+                                  color: AppColors.textDark,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),

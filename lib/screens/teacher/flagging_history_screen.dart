@@ -171,6 +171,7 @@ class _FlaggingHistoryScreenState extends ConsumerState<FlaggingHistoryScreen> {
           context,
           teacherUid: widget.user.uid,
           teacherName: widget.user.fullName,
+          schoolName: widget.user.schoolName,
         ),
         child: const Icon(Icons.add, color: Colors.white),
       ),

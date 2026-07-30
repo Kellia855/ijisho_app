@@ -72,7 +72,7 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final language = ref.watch(appLanguageProvider);
-    final studentsAsync = ref.watch(studentsStreamProvider);
+    final studentsAsync = ref.watch(studentsStreamProvider(widget.user.schoolName));
     final flagsAsync = ref.watch(teacherFlagsStreamProvider(widget.user.uid));
 
     return Scaffold(
@@ -169,6 +169,7 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
                                         context,
                                         teacherUid: widget.user.uid,
                                         teacherName: widget.user.fullName,
+                                        schoolName: widget.user.schoolName,
                                         preselectedStudent: _selectedStudent,
                                         preselectedCategory: c,
                                       ),
@@ -217,6 +218,7 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
           context,
           teacherUid: widget.user.uid,
           teacherName: widget.user.fullName,
+          schoolName: widget.user.schoolName,
           preselectedStudent: _selectedStudent,
         ),
         child: const Icon(Icons.add, color: Colors.white),

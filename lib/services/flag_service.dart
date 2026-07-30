@@ -22,8 +22,12 @@ class FlagService {
   /// All students, for the "Select Student" dropdown. Seed this
   /// collection manually in the Firestore console for now — there's no
   /// "add student" screen in the current designs.
-  Stream<List<Student>> streamStudents() {
-    return _studentsRef.orderBy('fullName').snapshots().map(
+  Stream<List<Student>> streamStudents({String? schoolName}) {
+    Query<Map<String, dynamic>> query = _studentsRef.orderBy('fullName');
+    if (schoolName != null && schoolName.isNotEmpty) {
+      query = query.where('schoolName', isEqualTo: schoolName);
+    }
+    return query.snapshots().map(
           (snap) => snap.docs
               .map((doc) => Student.fromMap(doc.id, doc.data()))
               .toList(),
@@ -40,13 +44,17 @@ class FlagService {
         .map((snap) => snap.docs.map(StudentFlag.fromDoc).toList());
   }
 
-  /// All flags school-wide, newest first — powers the principal
+  /// All flags for a specific school, newest first — powers the principal
   /// dashboard and analytics screen.
-  Stream<List<StudentFlag>> streamAllFlags() {
-    return _flagsRef
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snap) => snap.docs.map(StudentFlag.fromDoc).toList());
+  Stream<List<StudentFlag>> streamAllFlags({String? schoolName}) {
+    Query<Map<String, dynamic>> query = _flagsRef.orderBy('createdAt', descending: true);
+    if (schoolName != null && schoolName.isNotEmpty) {
+      query = query.where('schoolName', isEqualTo: schoolName);
+    }
+    return query.snapshots().map((snap) => snap.docs
+        .map((doc) => StudentFlag.fromDoc(
+            doc as DocumentSnapshot<Map<String, dynamic>>))
+        .toList());
   }
 
   Future<void> createFlag(StudentFlag flag) async {

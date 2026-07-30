@@ -3,12 +3,14 @@ class Student {
   final String fullName;
   final String gradeSection;
   final String? photoUrl;
+  final String? schoolName;
 
   const Student({
     required this.id,
     required this.fullName,
     required this.gradeSection,
     this.photoUrl,
+    this.schoolName,
   });
 
   factory Student.fromMap(String id, Map<String, dynamic> map) {
@@ -17,12 +19,14 @@ class Student {
       fullName: map['fullName'] as String? ?? 'Unknown',
       gradeSection: map['gradeSection'] as String? ?? '',
       photoUrl: map['photoUrl'] as String?,
+      schoolName: map['schoolName'] as String?,
     );
   }
 
   Map<String, dynamic> toMap() => {
         'fullName': fullName,
         'gradeSection': gradeSection,
-        if (photoUrl != null) 'photoUrl': photoUrl,
+        'photoUrl': ?photoUrl,
+        'schoolName': ?schoolName,
       };
 }

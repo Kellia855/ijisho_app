@@ -70,7 +70,7 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final language = ref.watch(appLanguageProvider);
-    final flagsAsync = ref.watch(allFlagsStreamProvider);
+    final flagsAsync = ref.watch(allFlagsStreamProvider(widget.user.schoolName));
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
@@ -107,7 +107,9 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
                   onLogout: _logOut,
                   onToggleLanguage: () => ref.read(appLanguageProvider.notifier).toggle(),
                   onAnalytics: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const AnalyticsScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => AnalyticsScreen(schoolName: widget.user.schoolName),
+                    ),
                   ),
                 ),
                 Expanded(
