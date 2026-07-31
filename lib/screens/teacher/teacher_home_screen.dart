@@ -72,7 +72,9 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final language = ref.watch(appLanguageProvider);
-    final studentsAsync = ref.watch(studentsStreamProvider(widget.user.schoolName));
+    final studentsAsync = ref.watch(
+      studentsStreamProvider(widget.user.schoolName),
+    );
     final flagsAsync = ref.watch(teacherFlagsStreamProvider(widget.user.uid));
 
     return Scaffold(
@@ -83,7 +85,8 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
           children: [
             _TopBar(
               onLogout: _logOut,
-              onToggleLanguage: () => ref.read(appLanguageProvider.notifier).toggle(),
+              onToggleLanguage: () =>
+                  ref.read(appLanguageProvider.notifier).toggle(),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -98,22 +101,34 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 20),
-                          Text(t('Select Student', language),
-                              style: const TextStyle(fontWeight: FontWeight.w600)),
+                          Text(
+                            t('Select Student', language),
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
                           const SizedBox(height: 8),
                           studentsAsync.when(
                             data: (students) {
-                              if (_selectedStudent == null && students.isNotEmpty) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  if (mounted) setState(() => _selectedStudent = students.first);
+                              if (_selectedStudent == null &&
+                                  students.isNotEmpty) {
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  if (mounted)
+                                    setState(
+                                      () => _selectedStudent = students.first,
+                                    );
                                 });
                               }
                               return Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: const Color(0xFFE2E5EC)),
+                                  border: Border.all(
+                                    color: const Color(0xFFE2E5EC),
+                                  ),
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<Student>(
@@ -121,19 +136,25 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
                                     isExpanded: true,
                                     hint: const Text('-- Select Student --'),
                                     items: students
-                                        .map((s) => DropdownMenuItem(
-                                              value: s,
-                                              child: Text(s.fullName),
-                                            ))
+                                        .map(
+                                          (s) => DropdownMenuItem(
+                                            value: s,
+                                            child: Text(s.fullName),
+                                          ),
+                                        )
                                         .toList(),
-                                    onChanged: (value) =>
-                                        setState(() => _selectedStudent = value),
+                                    onChanged: (value) => setState(
+                                      () => _selectedStudent = value,
+                                    ),
                                   ),
                                 ),
                               );
                             },
-                            loading: () => const Center(child: CircularProgressIndicator()),
-                            error: (e, _) => Text('Could not load students: $e'),
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            error: (e, _) =>
+                                Text('Could not load students: $e'),
                           ),
                           const SizedBox(height: 16),
                           _UrgentBanner(teacherUid: widget.user.uid),
@@ -141,16 +162,23 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(t('Report Issues', language),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700, fontSize: 16)),
+                              Text(
+                                t('Report Issues', language),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                ),
+                              ),
                               GestureDetector(
                                 onTap: () => _onNavTap(2),
-                                child: Text(t('View All', language),
-                                    style: const TextStyle(
-                                        color: AppColors.teacherGreen,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13)),
+                                child: Text(
+                                  t('View All', language),
+                                  style: const TextStyle(
+                                    color: AppColors.teacherGreen,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -163,23 +191,29 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
                             crossAxisSpacing: 12,
                             childAspectRatio: 1.4,
                             children: _reportCategories
-                                .map((c) => _ReportIssueCard(
-                                      category: c,
-                                      onTap: () => LogIssueSheet.show(
-                                        context,
-                                        teacherUid: widget.user.uid,
-                                        teacherName: widget.user.fullName,
-                                        schoolName: widget.user.schoolName,
-                                        preselectedStudent: _selectedStudent,
-                                        preselectedCategory: c,
-                                      ),
-                                    ))
+                                .map(
+                                  (c) => _ReportIssueCard(
+                                    category: c,
+                                    onTap: () => LogIssueSheet.show(
+                                      context,
+                                      teacherUid: widget.user.uid,
+                                      teacherName: widget.user.fullName,
+                                      schoolName: widget.user.schoolName,
+                                      preselectedStudent: _selectedStudent,
+                                      preselectedCategory: c,
+                                    ),
+                                  ),
+                                )
                                 .toList(),
                           ),
                           const SizedBox(height: 24),
-                          Text(t('Recent Submissions', language),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                          Text(
+                            t('Recent Submissions', language),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                          ),
                           const SizedBox(height: 12),
                           flagsAsync.when(
                             data: (allFlags) {
@@ -189,7 +223,9 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
                                   padding: EdgeInsets.symmetric(vertical: 12),
                                   child: Text(
                                     'No submissions yet — flag a student above to get started.',
-                                    style: TextStyle(color: AppColors.textMuted),
+                                    style: TextStyle(
+                                      color: AppColors.textMuted,
+                                    ),
                                   ),
                                 );
                               }
@@ -199,8 +235,11 @@ class _TeacherHomeScreenState extends ConsumerState<TeacherHomeScreen> {
                                     .toList(),
                               );
                             },
-                            loading: () => const Center(child: CircularProgressIndicator()),
-                            error: (e, _) => Text('Could not load submissions: $e'),
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            error: (e, _) =>
+                                Text('Could not load submissions: $e'),
                           ),
                         ],
                       ),
@@ -285,7 +324,8 @@ class _WelcomeCard extends StatelessWidget {
           CircleAvatar(
             radius: 26,
             backgroundColor: Colors.white24,
-            backgroundImage: (user.photoUrl != null && user.photoUrl!.isNotEmpty)
+            backgroundImage:
+                (user.photoUrl != null && user.photoUrl!.isNotEmpty)
                 ? NetworkImage(user.photoUrl!)
                 : null,
             child: (user.photoUrl == null || user.photoUrl!.isEmpty)
@@ -297,8 +337,10 @@ class _WelcomeCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(t('Welcome back!', language),
-                    style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                Text(
+                  t('Welcome back!', language),
+                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                ),
                 Text(
                   ' ${user.fullName}',
                   style: const TextStyle(
@@ -307,8 +349,10 @@ class _WelcomeCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text('Teacher',
-                    style: TextStyle(color: Colors.white70, fontSize: 12)),
+                const Text(
+                  'Teacher',
+                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -329,7 +373,9 @@ class _UrgentBanner extends ConsumerWidget {
 
     return flagsAsync.when(
       data: (allFlags) {
-        final urgent = allFlags.where((f) => f.severity == FlagSeverity.urgent).toList();
+        final urgent = allFlags
+            .where((f) => f.severity == FlagSeverity.urgent)
+            .toList();
         if (urgent.isEmpty) return const SizedBox.shrink();
         final flag = urgent.first;
 
@@ -337,57 +383,76 @@ class _UrgentBanner extends ConsumerWidget {
           borderRadius: BorderRadius.circular(14),
           child: IntrinsicHeight(
             child: Container(
-            color: Colors.white,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(width: 4, color: AppColors.urgentRed),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(flag.studentName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 15)),
-                            const PillBadge(label: 'URGENT', color: AppColors.urgentRed),
-                          ],
-                        ),
-                        Text(flag.gradeSection,
-                            style: const TextStyle(
-                                color: AppColors.textMuted, fontSize: 13)),
-                        const SizedBox(height: 8),
-                        Container(
-                          width: double.infinity,
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: AppColors.absentBg,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Row(
+              color: Colors.white,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(width: 4, color: AppColors.urgentRed),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(Icons.warning_amber_rounded,
-                                  color: AppColors.urgentRed, size: 16),
-                              SizedBox(width: 6),
-                              Text('Multiple flags raised',
-                                  style: TextStyle(
-                                      color: AppColors.urgentRed,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13)),
+                              Text(
+                                flag.studentName,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              const PillBadge(
+                                label: 'URGENT',
+                                color: AppColors.urgentRed,
+                              ),
                             ],
                           ),
-                        ),
-                      ],
+                          Text(
+                            flag.gradeSection,
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 13,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.absentBg,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.warning_amber_rounded,
+                                  color: AppColors.urgentRed,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  'Multiple flags raised',
+                                  style: TextStyle(
+                                    color: AppColors.urgentRed,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             ),
           ),
         );
@@ -427,16 +492,32 @@ class _ReportIssueCard extends StatelessWidget {
                         Container(
                           width: 36,
                           height: 36,
-                          decoration:
-                              BoxDecoration(color: category.bg, shape: BoxShape.circle),
-                          child: Icon(category.icon, color: category.accent, size: 18),
+                          decoration: BoxDecoration(
+                            color: category.bg,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            category.icon,
+                            color: category.accent,
+                            size: 18,
+                          ),
                         ),
                         const SizedBox(height: 8),
-                        Text(category.label,
-                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                        Text(
+                          category.label,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                          ),
+                        ),
                         if (category.subtitle.isNotEmpty)
-                          Text(category.subtitle,
-                              style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                          Text(
+                            category.subtitle,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -471,19 +552,34 @@ class _RecentSubmissionTile extends StatelessWidget {
           Container(
             width: 36,
             height: 36,
-            decoration: BoxDecoration(color: flag.category.bg, shape: BoxShape.circle),
-            child: Icon(flag.category.icon, color: flag.category.accent, size: 18),
+            decoration: BoxDecoration(
+              color: flag.category.bg,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              flag.category.icon,
+              color: flag.category.accent,
+              size: 18,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(flag.studentName,
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                Text(
+                  flag.studentName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
                 Text(
                   '${flag.category.label} \u00b7 ${DateFormat('h:mm a').format(flag.createdAt)}',
-                  style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textMuted,
+                  ),
                 ),
               ],
             ),

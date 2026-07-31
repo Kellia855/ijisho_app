@@ -40,9 +40,14 @@ class AnalyticsScreen extends ConsumerWidget {
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                   ),
                   const Expanded(
-                    child: Text('Analytics',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17)),
+                    child: Text(
+                      'Analytics',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
+                    ),
                   ),
                   const Icon(Icons.translate, color: Colors.white, size: 20),
                 ],
@@ -51,18 +56,25 @@ class AnalyticsScreen extends ConsumerWidget {
             Expanded(
               child: flagsAsync.when(
                 data: (flags) {
-                  final totalStudents = flags.map((f) => f.studentName).toSet().length;
+                  final totalStudents = flags
+                      .map((f) => f.studentName)
+                      .toSet()
+                      .length;
                   final atRisk = flags
                       .where((f) => f.severity != FlagSeverity.fine)
                       .map((f) => f.studentName)
                       .toSet()
                       .length;
 
-                  final urgent =
-                      flags.where((f) => f.severity == FlagSeverity.urgent).length;
-                  final warning =
-                      flags.where((f) => f.severity == FlagSeverity.warning).length;
-                  final fine = flags.where((f) => f.severity == FlagSeverity.fine).length;
+                  final urgent = flags
+                      .where((f) => f.severity == FlagSeverity.urgent)
+                      .length;
+                  final warning = flags
+                      .where((f) => f.severity == FlagSeverity.warning)
+                      .length;
+                  final fine = flags
+                      .where((f) => f.severity == FlagSeverity.fine)
+                      .length;
                   final total = (urgent + warning + fine).clamp(1, 1 << 30);
 
                   final byCategory = <FlagCategory, int>{};
@@ -76,7 +88,10 @@ class AnalyticsScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: _StatBox(label: 'Total Students', value: '$totalStudents'),
+                            child: _StatBox(
+                              label: 'Total Students',
+                              value: '$totalStudents',
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -107,11 +122,14 @@ class AnalyticsScreen extends ConsumerWidget {
                               gridData: const FlGridData(show: false),
                               titlesData: FlTitlesData(
                                 topTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
                                 rightTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
                                 leftTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
                                 bottomTitles: AxisTitles(
                                   sideTitles: SideTitles(
                                     showTitles: true,
@@ -120,9 +138,13 @@ class AnalyticsScreen extends ConsumerWidget {
                                       if (i < 0 || i >= _sampleDays.length) {
                                         return const SizedBox.shrink();
                                       }
-                                      return Text(_sampleDays[i],
-                                          style: const TextStyle(
-                                              fontSize: 10, color: AppColors.textMuted));
+                                      return Text(
+                                        _sampleDays[i],
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.textMuted,
+                                        ),
+                                      );
                                     },
                                   ),
                                 ),
@@ -134,7 +156,10 @@ class AnalyticsScreen extends ConsumerWidget {
                                 LineChartBarData(
                                   spots: List.generate(
                                     _sampleAttendance.length,
-                                    (i) => FlSpot(i.toDouble(), _sampleAttendance[i]),
+                                    (i) => FlSpot(
+                                      i.toDouble(),
+                                      _sampleAttendance[i],
+                                    ),
                                   ),
                                   isCurved: true,
                                   color: AppColors.principalPurple,
@@ -222,8 +247,10 @@ class AnalyticsScreen extends ConsumerWidget {
                         child: byCategory.isEmpty
                             ? const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20),
-                                child: Text('No flags logged yet.',
-                                    style: TextStyle(color: AppColors.textMuted)),
+                                child: Text(
+                                  'No flags logged yet.',
+                                  style: TextStyle(color: AppColors.textMuted),
+                                ),
                               )
                             : SizedBox(
                                 height: 160,
@@ -233,44 +260,69 @@ class AnalyticsScreen extends ConsumerWidget {
                                     borderData: FlBorderData(show: false),
                                     titlesData: FlTitlesData(
                                       topTitles: const AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false)),
+                                        sideTitles: SideTitles(
+                                          showTitles: false,
+                                        ),
+                                      ),
                                       rightTitles: const AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false)),
+                                        sideTitles: SideTitles(
+                                          showTitles: false,
+                                        ),
+                                      ),
                                       leftTitles: const AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false)),
+                                        sideTitles: SideTitles(
+                                          showTitles: false,
+                                        ),
+                                      ),
                                       bottomTitles: AxisTitles(
                                         sideTitles: SideTitles(
                                           showTitles: true,
                                           getTitlesWidget: (value, meta) {
-                                            final categories = byCategory.keys.toList();
+                                            final categories = byCategory.keys
+                                                .toList();
                                             final i = value.toInt();
-                                            if (i < 0 || i >= categories.length) {
+                                            if (i < 0 ||
+                                                i >= categories.length) {
                                               return const SizedBox.shrink();
                                             }
                                             return Padding(
-                                              padding: const EdgeInsets.only(top: 4),
+                                              padding: const EdgeInsets.only(
+                                                top: 4,
+                                              ),
                                               child: Text(
-                                                categories[i].label.split(' ').first,
+                                                categories[i].label
+                                                    .split(' ')
+                                                    .first,
                                                 style: const TextStyle(
-                                                    fontSize: 9, color: AppColors.textMuted),
+                                                  fontSize: 9,
+                                                  color: AppColors.textMuted,
+                                                ),
                                               ),
                                             );
                                           },
                                         ),
                                       ),
                                     ),
-                                    barGroups: List.generate(byCategory.length, (i) {
-                                      final category = byCategory.keys.elementAt(i);
-                                      final count = byCategory[category]!;
-                                      return BarChartGroupData(x: i, barRods: [
-                                        BarChartRodData(
-                                          toY: count.toDouble(),
-                                          color: category.accent,
-                                          width: 18,
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                      ]);
-                                    }),
+                                    barGroups: List.generate(
+                                      byCategory.length,
+                                      (i) {
+                                        final category = byCategory.keys
+                                            .elementAt(i);
+                                        final count = byCategory[category]!;
+                                        return BarChartGroupData(
+                                          x: i,
+                                          barRods: [
+                                            BarChartRodData(
+                                              toY: count.toDouble(),
+                                              color: category.accent,
+                                              width: 18,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -280,35 +332,55 @@ class AnalyticsScreen extends ConsumerWidget {
                         title: 'At-Risk Categories',
                         child: Column(
                           children: byCategory.entries
-                              .map((e) => Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 6),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 32,
-                                          height: 32,
-                                          decoration: BoxDecoration(
-                                            color: e.key.bg,
-                                            borderRadius: BorderRadius.circular(8),
+                              .map(
+                                (e) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 6,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 32,
+                                        height: 32,
+                                        decoration: BoxDecoration(
+                                          color: e.key.bg,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
                                           ),
-                                          child: Icon(e.key.icon,
-                                              size: 16, color: e.key.accent),
                                         ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Text(e.key.label,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w600, fontSize: 13)),
+                                        child: Icon(
+                                          e.key.icon,
+                                          size: 16,
+                                          color: e.key.accent,
                                         ),
-                                        Text('${e.value} Students',
-                                            style: const TextStyle(
-                                                fontSize: 12, color: AppColors.textMuted)),
-                                        const SizedBox(width: 6),
-                                        const Icon(Icons.chevron_right,
-                                            size: 16, color: AppColors.textMuted),
-                                      ],
-                                    ),
-                                  ))
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          e.key.label,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        '${e.value} Students',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.textMuted,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        size: 16,
+                                        color: AppColors.textMuted,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
                               .toList(),
                         ),
                       ),
@@ -326,10 +398,18 @@ class AnalyticsScreen extends ConsumerWidget {
                           child: const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.map_outlined, color: AppColors.textMuted),
+                              Icon(
+                                Icons.map_outlined,
+                                color: AppColors.textMuted,
+                              ),
                               SizedBox(height: 6),
-                              Text('Hotspot: Sector 4 \u00b7 15% Dropout Risk Increase',
-                                  style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                              Text(
+                                'Hotspot: Sector 4 \u00b7 15% Dropout Risk Increase',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: AppColors.textMuted,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -338,7 +418,8 @@ class AnalyticsScreen extends ConsumerWidget {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Could not load analytics: $e')),
+                error: (e, _) =>
+                    Center(child: Text('Could not load analytics: $e')),
               ),
             ),
           ],
@@ -363,15 +444,26 @@ class _StatBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+          ),
           const SizedBox(height: 4),
-          Text(value,
-              style:
-                  TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: valueColor)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: valueColor,
+            ),
+          ),
         ],
       ),
     );
@@ -396,28 +488,37 @@ class _SectionCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                ),
+              ),
               if (trailingNote != null)
-                Text(trailingNote!,
-                    style: const TextStyle(
-                        fontSize: 10,
-                        color: AppColors.textMuted,
-                        fontStyle: FontStyle.italic)),
+                Text(
+                  trailingNote!,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.textMuted,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 12),
           child,
-          if (footer != null) ...[
-            const SizedBox(height: 12),
-            footer!,
-          ],
+          if (footer != null) ...[const SizedBox(height: 12), footer!],
         ],
       ),
     );
@@ -434,8 +535,14 @@ class _StatFooterItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-        Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+        ),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+        ),
       ],
     );
   }
@@ -446,17 +553,28 @@ class _LegendRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const _LegendRow({required this.color, required this.label, required this.value});
+  const _LegendRow({
+    required this.color,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
         const SizedBox(width: 8),
         Text(label, style: const TextStyle(fontSize: 12)),
         const Spacer(),
-        Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+        ),
       ],
     );
   }

@@ -26,7 +26,8 @@ class PrincipalHomeScreen extends ConsumerStatefulWidget {
   const PrincipalHomeScreen({super.key, required this.user});
 
   @override
-  ConsumerState<PrincipalHomeScreen> createState() => _PrincipalHomeScreenState();
+  ConsumerState<PrincipalHomeScreen> createState() =>
+      _PrincipalHomeScreenState();
 }
 
 class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
@@ -58,7 +59,9 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
       );
     } else if (index == 2) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => InterventionScreen(user: widget.user)),
+        MaterialPageRoute(
+          builder: (_) => InterventionScreen(user: widget.user),
+        ),
       );
     } else if (index == 3) {
       Navigator.of(context).push(
@@ -70,7 +73,9 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final language = ref.watch(appLanguageProvider);
-    final flagsAsync = ref.watch(allFlagsStreamProvider(widget.user.schoolName));
+    final flagsAsync = ref.watch(
+      allFlagsStreamProvider(widget.user.schoolName),
+    );
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
@@ -78,23 +83,35 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
         bottom: false,
         child: flagsAsync.when(
           data: (allFlags) {
-            final totalStudents = allFlags.map((f) => f.studentName).toSet().length;
-            final atRisk = allFlags
-                .where((f) =>
-                    f.severity == FlagSeverity.urgent || f.severity == FlagSeverity.warning)
+            final totalStudents = allFlags
                 .map((f) => f.studentName)
                 .toSet()
                 .length;
-            final urgentCount =
-                allFlags.where((f) => f.severity == FlagSeverity.urgent).length;
+            final atRisk = allFlags
+                .where(
+                  (f) =>
+                      f.severity == FlagSeverity.urgent ||
+                      f.severity == FlagSeverity.warning,
+                )
+                .map((f) => f.studentName)
+                .toSet()
+                .length;
+            final urgentCount = allFlags
+                .where((f) => f.severity == FlagSeverity.urgent)
+                .length;
 
-            final filtered = allFlags.where((f) {
-              final matchesQuery = f.studentName.toLowerCase().contains(_query);
-              final matchesFilter =
-                  _activeFilter == null || f.category.broadCategory == _activeFilter;
-              return matchesQuery && matchesFilter;
-            }).toList()
-              ..sort((a, b) => b.severity.index.compareTo(a.severity.index));
+            final filtered =
+                allFlags.where((f) {
+                  final matchesQuery = f.studentName.toLowerCase().contains(
+                    _query,
+                  );
+                  final matchesFilter =
+                      _activeFilter == null ||
+                      f.category.broadCategory == _activeFilter;
+                  return matchesQuery && matchesFilter;
+                }).toList()..sort(
+                  (a, b) => b.severity.index.compareTo(a.severity.index),
+                );
 
             return Column(
               children: [
@@ -105,10 +122,12 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
                   atRisk: atRisk,
                   urgentCount: urgentCount,
                   onLogout: _logOut,
-                  onToggleLanguage: () => ref.read(appLanguageProvider.notifier).toggle(),
+                  onToggleLanguage: () =>
+                      ref.read(appLanguageProvider.notifier).toggle(),
                   onAnalytics: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => AnalyticsScreen(schoolName: widget.user.schoolName),
+                      builder: (_) =>
+                          AnalyticsScreen(schoolName: widget.user.schoolName),
                     ),
                   ),
                 ),
@@ -120,7 +139,8 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
                       children: [
                         TextField(
                           controller: _searchController,
-                          onChanged: (v) => setState(() => _query = v.toLowerCase()),
+                          onChanged: (v) =>
+                              setState(() => _query = v.toLowerCase()),
                           decoration: const InputDecoration(
                             hintText: 'Search student records...',
                             prefixIcon: Icon(Icons.search),
@@ -135,35 +155,47 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
                               _FilterChip(
                                 label: 'All',
                                 selected: _activeFilter == null,
-                                onTap: () => setState(() => _activeFilter = null),
+                                onTap: () =>
+                                    setState(() => _activeFilter = null),
                               ),
                               const SizedBox(width: 8),
                               _FilterChip(
                                 label: 'Financial',
-                                selected: _activeFilter == FlagCategory.financial,
-                                onTap: () =>
-                                    setState(() => _activeFilter = FlagCategory.financial),
+                                selected:
+                                    _activeFilter == FlagCategory.financial,
+                                onTap: () => setState(
+                                  () => _activeFilter = FlagCategory.financial,
+                                ),
                               ),
                               const SizedBox(width: 8),
                               _FilterChip(
                                 label: 'Academic',
-                                selected: _activeFilter == FlagCategory.academic,
-                                onTap: () =>
-                                    setState(() => _activeFilter = FlagCategory.academic),
+                                selected:
+                                    _activeFilter == FlagCategory.academic,
+                                onTap: () => setState(
+                                  () => _activeFilter = FlagCategory.academic,
+                                ),
                               ),
                               const SizedBox(width: 8),
                               _FilterChip(
                                 label: 'Attendance',
-                                selected: _activeFilter == FlagCategory.attendance,
-                                onTap: () =>
-                                    setState(() => _activeFilter = FlagCategory.attendance),
+                                selected:
+                                    _activeFilter == FlagCategory.attendance,
+                                onTap: () => setState(
+                                  () => _activeFilter = FlagCategory.attendance,
+                                ),
                               ),
                             ],
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Text(t('Attention Required', language),
-                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                        Text(
+                          t('Attention Required', language),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
+                        ),
                         const SizedBox(height: 12),
                         if (filtered.isEmpty)
                           const Padding(
@@ -174,14 +206,19 @@ class _PrincipalHomeScreenState extends ConsumerState<PrincipalHomeScreen> {
                             ),
                           )
                         else
-                          ...filtered.map((f) => _AttentionCard(
-                                flag: f,
-                                onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => CaseDetailsScreen(flag: f, user: widget.user),
+                          ...filtered.map(
+                            (f) => _AttentionCard(
+                              flag: f,
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => CaseDetailsScreen(
+                                    flag: f,
+                                    user: widget.user,
                                   ),
                                 ),
-                              )),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -250,7 +287,11 @@ class _TopSection extends StatelessWidget {
               const Spacer(),
               IconButton(
                 onPressed: onToggleLanguage,
-                icon: const Icon(Icons.translate, color: Colors.white, size: 20),
+                icon: const Icon(
+                  Icons.translate,
+                  color: Colors.white,
+                  size: 20,
+                ),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
               ),
@@ -263,7 +304,8 @@ class _TopSection extends StatelessWidget {
               CircleAvatar(
                 radius: 22,
                 backgroundColor: Colors.white24,
-                backgroundImage: (user.photoUrl != null && user.photoUrl!.isNotEmpty)
+                backgroundImage:
+                    (user.photoUrl != null && user.photoUrl!.isNotEmpty)
                     ? NetworkImage(user.photoUrl!)
                     : null,
                 child: (user.photoUrl == null || user.photoUrl!.isEmpty)
@@ -275,14 +317,22 @@ class _TopSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(' ${user.fullName}',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold)),
+                    Text(
+                      ' ${user.fullName}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text(t('Welcome back!', language),
-                        style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                    Text(
+                      t('Welcome back!', language),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -291,11 +341,15 @@ class _TopSection extends StatelessWidget {
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: AppColors.principalPurple,
-                  shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
                 icon: const Icon(Icons.bar_chart, size: 16),
-                label: Text(t('Analytics', language), style: const TextStyle(fontSize: 12)),
+                label: Text(
+                  t('Analytics', language),
+                  style: const TextStyle(fontSize: 12),
+                ),
               ),
             ],
           ),
@@ -353,16 +407,26 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+      ),
       child: Column(
         children: [
-          Text(value,
-              style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: valueColor)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: valueColor,
+            ),
+          ),
           const SizedBox(height: 2),
-          Text(label,
-              style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
-              textAlign: TextAlign.center),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
@@ -374,7 +438,11 @@ class _FilterChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  const _FilterChip({required this.label, required this.selected, required this.onTap});
+  const _FilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +454,10 @@ class _FilterChip extends StatelessWidget {
           color: selected ? AppColors.principalPurple : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: selected ? AppColors.principalPurple : const Color(0xFFE2E5EC)),
+            color: selected
+                ? AppColors.principalPurple
+                : const Color(0xFFE2E5EC),
+          ),
         ),
         alignment: Alignment.center,
         child: Text(
@@ -418,55 +489,71 @@ class _AttentionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           child: IntrinsicHeight(
             child: Container(
-            color: Colors.white,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(width: 4, color: flag.severity.color),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundColor: flag.category.bg,
-                          backgroundImage: (flag.studentPhotoUrl != null &&
-                                  flag.studentPhotoUrl!.isNotEmpty)
-                              ? NetworkImage(flag.studentPhotoUrl!)
-                              : null,
-                          child: (flag.studentPhotoUrl == null ||
-                                  flag.studentPhotoUrl!.isEmpty)
-                              ? Icon(Icons.person, color: flag.category.accent)
-                              : null,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(flag.studentName,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700, fontSize: 14)),
-                              Text(flag.gradeSection,
-                                  style: const TextStyle(
-                                      fontSize: 12, color: AppColors.textMuted)),
-                              const SizedBox(height: 4),
-                              PillBadge(
-                                label: flag.category.label,
-                                color: flag.category.accent,
-                                filled: false,
-                              ),
-                            ],
+              color: Colors.white,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(width: 4, color: flag.severity.color),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundColor: flag.category.bg,
+                            backgroundImage:
+                                (flag.studentPhotoUrl != null &&
+                                    flag.studentPhotoUrl!.isNotEmpty)
+                                ? NetworkImage(flag.studentPhotoUrl!)
+                                : null,
+                            child:
+                                (flag.studentPhotoUrl == null ||
+                                    flag.studentPhotoUrl!.isEmpty)
+                                ? Icon(
+                                    Icons.person,
+                                    color: flag.category.accent,
+                                  )
+                                : null,
                           ),
-                        ),
-                        PillBadge(label: flag.severity.label, color: flag.severity.color),
-                      ],
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  flag.studentName,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  flag.gradeSection,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                PillBadge(
+                                  label: flag.category.label,
+                                  color: flag.category.accent,
+                                  filled: false,
+                                ),
+                              ],
+                            ),
+                          ),
+                          PillBadge(
+                            label: flag.severity.label,
+                            color: flag.severity.color,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             ),
           ),
         ),

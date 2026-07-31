@@ -4,22 +4,26 @@ import '../models/flag.dart';
 import '../models/student.dart';
 import 'service_providers.dart';
 
-final studentsStreamProvider =
-    StreamProvider.family<List<Student>, String?>((ref, schoolName) {
+final studentsStreamProvider = StreamProvider.family<List<Student>, String?>((
+  ref,
+  schoolName,
+) {
   return ref.watch(flagServiceProvider).streamStudents(schoolName: schoolName);
 });
 
 final allFlagsStreamProvider =
     StreamProvider.family<List<StudentFlag>, String?>((ref, schoolName) {
-  return ref.watch(flagServiceProvider).streamAllFlags(schoolName: schoolName);
-});
+      return ref
+          .watch(flagServiceProvider)
+          .streamAllFlags(schoolName: schoolName);
+    });
 
 final teacherFlagsStreamProvider =
     StreamProvider.family<List<StudentFlag>, String>((ref, teacherUid) {
-  return ref.watch(flagServiceProvider).streamFlagsForTeacher(teacherUid);
-});
+      return ref.watch(flagServiceProvider).streamFlagsForTeacher(teacherUid);
+    });
 
 final studentFlagsStreamProvider =
     StreamProvider.family<List<StudentFlag>, String>((ref, studentName) {
-  return ref.watch(flagServiceProvider).streamFlagsForStudent(studentName);
-});
+      return ref.watch(flagServiceProvider).streamFlagsForStudent(studentName);
+    });

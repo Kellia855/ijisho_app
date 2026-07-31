@@ -13,5 +13,6 @@ class AppLanguageNotifier extends Notifier<AppLanguage> {
   }
 }
 
-final appLanguageProvider =
-    NotifierProvider<AppLanguageNotifier, AppLanguage>(AppLanguageNotifier.new);
+final appLanguageProvider = NotifierProvider<AppLanguageNotifier, AppLanguage>(
+  AppLanguageNotifier.new,
+);

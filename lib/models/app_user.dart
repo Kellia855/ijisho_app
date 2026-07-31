@@ -2,19 +2,19 @@ enum UserRole { teacher, principal }
 
 extension UserRoleX on UserRole {
   String get label => switch (this) {
-        UserRole.teacher => 'Teacher',
-        UserRole.principal => 'Principal',
-      };
+    UserRole.teacher => 'Teacher',
+    UserRole.principal => 'Principal',
+  };
 
   String get firestoreValue => switch (this) {
-        UserRole.teacher => 'teacher',
-        UserRole.principal => 'principal',
-      };
+    UserRole.teacher => 'teacher',
+    UserRole.principal => 'principal',
+  };
 
   static UserRole fromFirestore(String value) => switch (value) {
-        'principal' => UserRole.principal,
-        _ => UserRole.teacher,
-      };
+    'principal' => UserRole.principal,
+    _ => UserRole.teacher,
+  };
 }
 
 /// Represents a signed-up IJISHO user, stored in the `users` collection

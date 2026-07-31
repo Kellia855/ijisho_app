@@ -20,7 +20,8 @@ class FlaggingHistoryScreen extends ConsumerStatefulWidget {
   const FlaggingHistoryScreen({super.key, required this.user});
 
   @override
-  ConsumerState<FlaggingHistoryScreen> createState() => _FlaggingHistoryScreenState();
+  ConsumerState<FlaggingHistoryScreen> createState() =>
+      _FlaggingHistoryScreenState();
 }
 
 class _FlaggingHistoryScreenState extends ConsumerState<FlaggingHistoryScreen> {
@@ -69,16 +70,26 @@ class _FlaggingHistoryScreenState extends ConsumerState<FlaggingHistoryScreen> {
                       color: AppColors.teacherGreenLight,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.shield_outlined,
-                        color: AppColors.teacherGreen, size: 16),
+                    child: const Icon(
+                      Icons.shield_outlined,
+                      color: AppColors.teacherGreen,
+                      size: 16,
+                    ),
                   ),
                   const SizedBox(width: 8),
-                  const Text('IJISHO',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const Text(
+                    'IJISHO',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () => ref.read(appLanguageProvider.notifier).toggle(),
-                    icon: const Icon(Icons.translate, size: 20, color: AppColors.textDark),
+                    onPressed: () =>
+                        ref.read(appLanguageProvider.notifier).toggle(),
+                    icon: const Icon(
+                      Icons.translate,
+                      size: 20,
+                      color: AppColors.textDark,
+                    ),
                   ),
                 ],
               ),
@@ -88,8 +99,13 @@ class _FlaggingHistoryScreenState extends ConsumerState<FlaggingHistoryScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(t('Flagging History', language),
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  Text(
+                    t('Flagging History', language),
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   const Text(
                     'Review all student intervention requests and flagged concerns.',
@@ -101,7 +117,8 @@ class _FlaggingHistoryScreenState extends ConsumerState<FlaggingHistoryScreen> {
                       Expanded(
                         child: TextField(
                           controller: _searchController,
-                          onChanged: (v) => setState(() => _query = v.toLowerCase()),
+                          onChanged: (v) =>
+                              setState(() => _query = v.toLowerCase()),
                           decoration: InputDecoration(
                             hintText: t('Search students...', language),
                             prefixIcon: const Icon(Icons.search),
@@ -118,12 +135,19 @@ class _FlaggingHistoryScreenState extends ConsumerState<FlaggingHistoryScreen> {
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.filter_list, size: 18, color: AppColors.teacherGreen),
+                            const Icon(
+                              Icons.filter_list,
+                              size: 18,
+                              color: AppColors.teacherGreen,
+                            ),
                             const SizedBox(width: 6),
-                            Text(t('Filter', language),
-                                style: const TextStyle(
-                                    color: AppColors.teacherGreen,
-                                    fontWeight: FontWeight.w600)),
+                            Text(
+                              t('Filter', language),
+                              style: const TextStyle(
+                                color: AppColors.teacherGreen,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -136,7 +160,9 @@ class _FlaggingHistoryScreenState extends ConsumerState<FlaggingHistoryScreen> {
               child: flagsAsync.when(
                 data: (allFlags) {
                   final flags = allFlags
-                      .where((f) => f.studentName.toLowerCase().contains(_query))
+                      .where(
+                        (f) => f.studentName.toLowerCase().contains(_query),
+                      )
                       .toList();
 
                   if (flags.isEmpty) {
@@ -155,11 +181,13 @@ class _FlaggingHistoryScreenState extends ConsumerState<FlaggingHistoryScreen> {
                   return ListView.builder(
                     padding: const EdgeInsets.fromLTRB(20, 16, 20, 90),
                     itemCount: flags.length,
-                    itemBuilder: (context, index) => _FlagCard(flag: flags[index]),
+                    itemBuilder: (context, index) =>
+                        _FlagCard(flag: flags[index]),
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Could not load flags: $e')),
+                error: (e, _) =>
+                    Center(child: Text('Could not load flags: $e')),
               ),
             ),
           ],
@@ -207,18 +235,35 @@ class _FlagCard extends StatelessWidget {
               Container(
                 width: 40,
                 height: 40,
-                decoration: BoxDecoration(color: flag.category.bg, shape: BoxShape.circle),
-                child: Icon(flag.category.icon, color: flag.category.accent, size: 20),
+                decoration: BoxDecoration(
+                  color: flag.category.bg,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  flag.category.icon,
+                  color: flag.category.accent,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(flag.studentName,
-                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
-                    Text(flag.gradeSection,
-                        style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                    Text(
+                      flag.studentName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      flag.gradeSection,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -234,11 +279,18 @@ class _FlagCard extends StatelessWidget {
                 filled: false,
               ),
               const SizedBox(width: 8),
-              Icon(Icons.calendar_today_outlined, size: 13, color: AppColors.textMuted),
+              Icon(
+                Icons.calendar_today_outlined,
+                size: 13,
+                color: AppColors.textMuted,
+              ),
               const SizedBox(width: 4),
               Text(
                 DateFormat('MMM d, yyyy').format(flag.createdAt),
-                style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textMuted,
+                ),
               ),
             ],
           ),

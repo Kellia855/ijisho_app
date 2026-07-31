@@ -49,7 +49,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (appUser == null) {
         // null means either cancelled or new user needing role selection
         // Check if Firebase has a current user to distinguish the two cases
-        final hasFirebaseUser = ref.read(authServiceProvider).currentUser != null;
+        final hasFirebaseUser =
+            ref.read(authServiceProvider).currentUser != null;
         if (!hasFirebaseUser) return; // cancelled — do nothing
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const GoogleRolePickerScreen()),
@@ -80,7 +81,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      final appUser = await ref.read(authServiceProvider).signIn(
+      final appUser = await ref
+          .read(authServiceProvider)
+          .signIn(
             email: _emailController.text,
             password: _passwordController.text,
           );
@@ -119,7 +122,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.arrow_back, size: 18),
                 label: const Text('Back'),
-                style: TextButton.styleFrom(foregroundColor: AppColors.textDark),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.textDark,
+                ),
               ),
               const SizedBox(height: 12),
               Center(
@@ -160,7 +165,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Email', style: TextStyle(fontWeight: FontWeight.w600)),
+                    const Text(
+                      'Email',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     const SizedBox(height: 6),
                     TextFormField(
                       controller: _emailController,
@@ -177,7 +185,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    const Text('Password', style: TextStyle(fontWeight: FontWeight.w600)),
+                    const Text(
+                      'Password',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     const SizedBox(height: 6),
                     TextFormField(
                       controller: _passwordController,
@@ -192,8 +203,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 : Icons.visibility_off_outlined,
                             color: AppColors.textMuted,
                           ),
-                          onPressed: () =>
-                              setState(() => _obscurePassword = !_obscurePassword),
+                          onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                       ),
                       validator: (value) {
@@ -207,7 +219,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: 12),
                       Text(
                         _errorText!,
-                        style: const TextStyle(color: AppColors.urgentRed, fontSize: 13),
+                        style: const TextStyle(
+                          color: AppColors.urgentRed,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                     const SizedBox(height: 24),
@@ -241,9 +256,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const Expanded(child: Divider()),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text('OR',
-                              style: TextStyle(
-                                  fontSize: 12, color: AppColors.textMuted)),
+                          child: Text(
+                            'OR',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
                         ),
                         const Expanded(child: Divider()),
                       ],
@@ -263,16 +282,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const FaIcon(FontAwesomeIcons.google,
-                                size: 18, color: Color(0xFF4285F4)),
+                            const FaIcon(
+                              FontAwesomeIcons.google,
+                              size: 18,
+                              color: Color(0xFF4285F4),
+                            ),
                             const SizedBox(width: 10),
                             const Flexible(
                               child: Text(
                                 'Sign in with Google',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: AppColors.textDark,
-                                    fontWeight: FontWeight.w500),
+                                  color: AppColors.textDark,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],

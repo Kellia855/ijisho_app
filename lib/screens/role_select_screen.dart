@@ -22,7 +22,8 @@ class RoleSelectScreen extends ConsumerWidget {
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton.icon(
-                  onPressed: () => ref.read(appLanguageProvider.notifier).toggle(),
+                  onPressed: () =>
+                      ref.read(appLanguageProvider.notifier).toggle(),
                   icon: const Icon(Icons.translate, size: 18),
                   label: Text(t('Kinyarwanda', language)),
                   style: TextButton.styleFrom(
@@ -60,7 +61,10 @@ class RoleSelectScreen extends ConsumerWidget {
               const SizedBox(height: 4),
               Text(
                 t('Select Your Role', language),
-                style: const TextStyle(fontSize: 15, color: AppColors.textMuted),
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: AppColors.textMuted,
+                ),
               ),
               const SizedBox(height: 32),
               _RoleCard(

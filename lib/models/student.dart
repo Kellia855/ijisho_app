@@ -24,9 +24,9 @@ class Student {
   }
 
   Map<String, dynamic> toMap() => {
-        'fullName': fullName,
-        'gradeSection': gradeSection,
-        'photoUrl': ?photoUrl,
-        'schoolName': ?schoolName,
-      };
+    'fullName': fullName,
+    'gradeSection': gradeSection,
+    'photoUrl': ?photoUrl,
+    'schoolName': ?schoolName,
+  };
 }

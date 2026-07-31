@@ -21,53 +21,53 @@ enum FlagCategory {
 
 extension FlagCategoryX on FlagCategory {
   String get label => switch (this) {
-        FlagCategory.absent => 'Absent',
-        FlagCategory.noUniform => 'No Uniform',
-        FlagCategory.noLunch => 'No Lunch',
-        FlagCategory.struggling => 'Struggling in Class',
-        FlagCategory.financial => 'Financial Stress',
-        FlagCategory.academic => 'Academic Struggle',
-        FlagCategory.attendance => 'Attendance Issues',
-        FlagCategory.behavioral => 'Behavioral',
-      };
+    FlagCategory.absent => 'Absent',
+    FlagCategory.noUniform => 'No Uniform',
+    FlagCategory.noLunch => 'No Lunch',
+    FlagCategory.struggling => 'Struggling in Class',
+    FlagCategory.financial => 'Financial Stress',
+    FlagCategory.academic => 'Academic Struggle',
+    FlagCategory.attendance => 'Attendance Issues',
+    FlagCategory.behavioral => 'Behavioral',
+  };
 
   String get subtitle => switch (this) {
-        FlagCategory.absent => 'Daily Attendance',
-        FlagCategory.noUniform => 'Dress Code',
-        FlagCategory.noLunch => 'Food Support',
-        FlagCategory.struggling => 'Academic Help',
-        _ => '',
-      };
+    FlagCategory.absent => 'Daily Attendance',
+    FlagCategory.noUniform => 'Dress Code',
+    FlagCategory.noLunch => 'Food Support',
+    FlagCategory.struggling => 'Academic Help',
+    _ => '',
+  };
 
   IconData get icon => switch (this) {
-        FlagCategory.absent => Icons.person_off_outlined,
-        FlagCategory.noUniform => Icons.checkroom_outlined,
-        FlagCategory.noLunch => Icons.restaurant_outlined,
-        FlagCategory.struggling => Icons.trending_down,
-        FlagCategory.financial => Icons.payments_outlined,
-        FlagCategory.academic => Icons.menu_book_outlined,
-        FlagCategory.attendance => Icons.event_busy_outlined,
-        FlagCategory.behavioral => Icons.psychology_outlined,
-      };
+    FlagCategory.absent => Icons.person_off_outlined,
+    FlagCategory.noUniform => Icons.checkroom_outlined,
+    FlagCategory.noLunch => Icons.restaurant_outlined,
+    FlagCategory.struggling => Icons.trending_down,
+    FlagCategory.financial => Icons.payments_outlined,
+    FlagCategory.academic => Icons.menu_book_outlined,
+    FlagCategory.attendance => Icons.event_busy_outlined,
+    FlagCategory.behavioral => Icons.psychology_outlined,
+  };
 
   Color get accent => switch (this) {
-        FlagCategory.absent => AppColors.absentAccent,
-        FlagCategory.noUniform => AppColors.noUniformAccent,
-        FlagCategory.noLunch => AppColors.noLunchAccent,
-        FlagCategory.struggling => AppColors.strugglingAccent,
-        FlagCategory.financial => AppColors.financialAccent,
-        FlagCategory.academic => AppColors.academicAccent,
-        FlagCategory.attendance => AppColors.attendanceAccent,
-        FlagCategory.behavioral => AppColors.behavioralAccent,
-      };
+    FlagCategory.absent => AppColors.absentAccent,
+    FlagCategory.noUniform => AppColors.noUniformAccent,
+    FlagCategory.noLunch => AppColors.noLunchAccent,
+    FlagCategory.struggling => AppColors.strugglingAccent,
+    FlagCategory.financial => AppColors.financialAccent,
+    FlagCategory.academic => AppColors.academicAccent,
+    FlagCategory.attendance => AppColors.attendanceAccent,
+    FlagCategory.behavioral => AppColors.behavioralAccent,
+  };
 
   Color get bg => switch (this) {
-        FlagCategory.absent => AppColors.absentBg,
-        FlagCategory.noUniform => AppColors.noUniformBg,
-        FlagCategory.noLunch => AppColors.noLunchBg,
-        FlagCategory.struggling => AppColors.strugglingBg,
-        _ => accent.withValues(alpha: 0.12),
-      };
+    FlagCategory.absent => AppColors.absentBg,
+    FlagCategory.noUniform => AppColors.noUniformBg,
+    FlagCategory.noLunch => AppColors.noLunchBg,
+    FlagCategory.struggling => AppColors.strugglingBg,
+    _ => accent.withValues(alpha: 0.12),
+  };
 
   String get firestoreValue => name;
 
@@ -80,15 +80,15 @@ extension FlagCategoryX on FlagCategory {
   /// [financial]/[academic]/[attendance] directly, which no flag ever
   /// has, so every filter would silently show zero results.
   FlagCategory get broadCategory => switch (this) {
-        FlagCategory.absent => FlagCategory.attendance,
-        FlagCategory.noUniform => FlagCategory.financial,
-        FlagCategory.noLunch => FlagCategory.financial,
-        FlagCategory.struggling => FlagCategory.academic,
-        FlagCategory.financial => FlagCategory.financial,
-        FlagCategory.academic => FlagCategory.academic,
-        FlagCategory.attendance => FlagCategory.attendance,
-        FlagCategory.behavioral => FlagCategory.behavioral,
-      };
+    FlagCategory.absent => FlagCategory.attendance,
+    FlagCategory.noUniform => FlagCategory.financial,
+    FlagCategory.noLunch => FlagCategory.financial,
+    FlagCategory.struggling => FlagCategory.academic,
+    FlagCategory.financial => FlagCategory.financial,
+    FlagCategory.academic => FlagCategory.academic,
+    FlagCategory.attendance => FlagCategory.attendance,
+    FlagCategory.behavioral => FlagCategory.behavioral,
+  };
 
   static FlagCategory fromFirestore(String value) => FlagCategory.values
       .firstWhere((c) => c.name == value, orElse: () => FlagCategory.academic);
@@ -100,16 +100,16 @@ enum FlagSeverity { urgent, warning, fine }
 
 extension FlagSeverityX on FlagSeverity {
   String get label => switch (this) {
-        FlagSeverity.urgent => 'URGENT',
-        FlagSeverity.warning => 'WARNING',
-        FlagSeverity.fine => 'FINE',
-      };
+    FlagSeverity.urgent => 'URGENT',
+    FlagSeverity.warning => 'WARNING',
+    FlagSeverity.fine => 'FINE',
+  };
 
   Color get color => switch (this) {
-        FlagSeverity.urgent => AppColors.urgentRed,
-        FlagSeverity.warning => AppColors.warningOrange,
-        FlagSeverity.fine => AppColors.fineGreen,
-      };
+    FlagSeverity.urgent => AppColors.urgentRed,
+    FlagSeverity.warning => AppColors.warningOrange,
+    FlagSeverity.fine => AppColors.fineGreen,
+  };
 
   String get firestoreValue => name;
 
@@ -123,21 +123,23 @@ enum FlagStatus { reported, underReview, resolved }
 
 extension FlagStatusX on FlagStatus {
   String get label => switch (this) {
-        FlagStatus.reported => 'REPORTED',
-        FlagStatus.underReview => 'UNDER REVIEW',
-        FlagStatus.resolved => 'RESOLVED',
-      };
+    FlagStatus.reported => 'REPORTED',
+    FlagStatus.underReview => 'UNDER REVIEW',
+    FlagStatus.resolved => 'RESOLVED',
+  };
 
   Color get color => switch (this) {
-        FlagStatus.reported => AppColors.urgentRed,
-        FlagStatus.underReview => AppColors.fineGreen,
-        FlagStatus.resolved => AppColors.textMuted,
-      };
+    FlagStatus.reported => AppColors.urgentRed,
+    FlagStatus.underReview => AppColors.fineGreen,
+    FlagStatus.resolved => AppColors.textMuted,
+  };
 
   String get firestoreValue => name;
 
-  static FlagStatus fromFirestore(String value) => FlagStatus.values
-      .firstWhere((s) => s.name == value, orElse: () => FlagStatus.reported);
+  static FlagStatus fromFirestore(String value) => FlagStatus.values.firstWhere(
+    (s) => s.name == value,
+    orElse: () => FlagStatus.reported,
+  );
 }
 
 /// A single flagged concern about a student, created by a teacher and

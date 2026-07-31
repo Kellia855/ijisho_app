@@ -26,21 +26,21 @@ class CaseDetailsScreen extends StatelessWidget {
     }
     Navigator.of(context).pop();
     if (index == 1) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => StudentsScreen(user: user)),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => StudentsScreen(user: user)));
     } else if (index == 3) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => ProfileScreen(user: user)),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => ProfileScreen(user: user)));
     }
   }
 
   String get _severityLabel => switch (flag.severity) {
-        FlagSeverity.urgent => 'High',
-        FlagSeverity.warning => 'Medium',
-        FlagSeverity.fine => 'Low',
-      };
+    FlagSeverity.urgent => 'High',
+    FlagSeverity.warning => 'Medium',
+    FlagSeverity.fine => 'Low',
+  };
 
   String get _ordinal {
     final n = flag.flagCountThisTerm;
@@ -67,16 +67,24 @@ class CaseDetailsScreen extends StatelessWidget {
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                   ),
                   const Expanded(
-                    child: Text('Case Details',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17)),
+                    child: Text(
+                      'Case Details',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
+                    ),
                   ),
                   const Icon(Icons.translate, color: Colors.white, size: 20),
                   const SizedBox(width: 10),
                   const CircleAvatar(
                     radius: 15,
                     backgroundColor: Colors.white24,
-                    child: Text('P', style: TextStyle(color: Colors.white, fontSize: 13)),
+                    child: Text(
+                      'P',
+                      style: TextStyle(color: Colors.white, fontSize: 13),
+                    ),
                   ),
                 ],
               ),
@@ -96,13 +104,19 @@ class CaseDetailsScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 30,
                           backgroundColor: flag.category.bg,
-                          backgroundImage: (flag.studentPhotoUrl != null &&
+                          backgroundImage:
+                              (flag.studentPhotoUrl != null &&
                                   flag.studentPhotoUrl!.isNotEmpty)
                               ? NetworkImage(flag.studentPhotoUrl!)
                               : null,
-                          child: (flag.studentPhotoUrl == null ||
+                          child:
+                              (flag.studentPhotoUrl == null ||
                                   flag.studentPhotoUrl!.isEmpty)
-                              ? Icon(Icons.person, size: 30, color: flag.category.accent)
+                              ? Icon(
+                                  Icons.person,
+                                  size: 30,
+                                  color: flag.category.accent,
+                                )
                               : null,
                         ),
                         const SizedBox(width: 14),
@@ -113,26 +127,44 @@ class CaseDetailsScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: Text(flag.studentName,
-                                        style: const TextStyle(
-                                            fontSize: 17, fontWeight: FontWeight.bold)),
+                                    child: Text(
+                                      flag.studentName,
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                  const PillBadge(label: 'FLAGGED', color: AppColors.urgentRed),
+                                  const PillBadge(
+                                    label: 'FLAGGED',
+                                    color: AppColors.urgentRed,
+                                  ),
                                 ],
                               ),
-                              Text(flag.gradeSection,
-                                  style: const TextStyle(
-                                      fontSize: 13, color: AppColors.textMuted)),
+                              Text(
+                                flag.gradeSection,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: AppColors.textMuted,
+                                ),
+                              ),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  const Icon(Icons.calendar_today_outlined,
-                                      size: 12, color: AppColors.textMuted),
+                                  const Icon(
+                                    Icons.calendar_today_outlined,
+                                    size: 12,
+                                    color: AppColors.textMuted,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    DateFormat('MMM d, yyyy').format(flag.createdAt),
+                                    DateFormat(
+                                      'MMM d, yyyy',
+                                    ).format(flag.createdAt),
                                     style: const TextStyle(
-                                        fontSize: 11, color: AppColors.textMuted),
+                                      fontSize: 11,
+                                      color: AppColors.textMuted,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -143,8 +175,10 @@ class CaseDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text('Case Severity',
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                  const Text(
+                    'Case Severity',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  ),
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -174,93 +208,126 @@ class CaseDetailsScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text("Teacher's Observations",
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                  const Text(
+                    "Teacher's Observations",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  ),
                   const SizedBox(height: 10),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(14),
                     child: IntrinsicHeight(
                       child: Container(
-                      color: Colors.white,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Container(width: 4, color: AppColors.principalPurple),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(14),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                                        future: FirebaseFirestore.instance
-                                            .collection('users')
-                                            .doc(flag.teacherUid)
-                                            .get(),
-                                        builder: (context, snapshot) {
-                                          final photoUrl = snapshot.data?.data()?['photoUrl']
-                                              as String?;
-                                          return CircleAvatar(
-                                            radius: 14,
-                                            backgroundColor: AppColors.principalPurpleLight,
-                                            backgroundImage:
-                                                (photoUrl != null && photoUrl.isNotEmpty)
-                                                    ? NetworkImage(photoUrl)
-                                                    : null,
-                                            child: (photoUrl == null || photoUrl.isEmpty)
-                                                ? const Icon(Icons.person,
-                                                    size: 14, color: AppColors.principalPurple)
-                                                : null,
-                                          );
-                                        },
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
+                        color: Colors.white,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              width: 4,
+                              color: AppColors.principalPurple,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(14),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        FutureBuilder<
+                                          DocumentSnapshot<Map<String, dynamic>>
+                                        >(
+                                          future: FirebaseFirestore.instance
+                                              .collection('users')
+                                              .doc(flag.teacherUid)
+                                              .get(),
+                                          builder: (context, snapshot) {
+                                            final photoUrl =
+                                                snapshot.data
+                                                        ?.data()?['photoUrl']
+                                                    as String?;
+                                            return CircleAvatar(
+                                              radius: 14,
+                                              backgroundColor: AppColors
+                                                  .principalPurpleLight,
+                                              backgroundImage:
+                                                  (photoUrl != null &&
+                                                      photoUrl.isNotEmpty)
+                                                  ? NetworkImage(photoUrl)
+                                                  : null,
+                                              child:
+                                                  (photoUrl == null ||
+                                                      photoUrl.isEmpty)
+                                                  ? const Icon(
+                                                      Icons.person,
+                                                      size: 14,
+                                                      color: AppColors
+                                                          .principalPurple,
+                                                    )
+                                                  : null,
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
                                                 'Mr. ${flag.teacherName.isEmpty ? "Teacher" : flag.teacherName}',
                                                 style: const TextStyle(
-                                                    fontWeight: FontWeight.w600, fontSize: 13)),
-                                            const Text('Class Teacher',
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                              const Text(
+                                                'Class Teacher',
                                                 style: TextStyle(
-                                                    fontSize: 11, color: AppColors.textMuted)),
-                                          ],
+                                                  fontSize: 11,
+                                                  color: AppColors.textMuted,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Text(DateFormat('MMM d, HH:mm').format(flag.createdAt),
+                                        Text(
+                                          DateFormat(
+                                            'MMM d, HH:mm',
+                                          ).format(flag.createdAt),
                                           style: const TextStyle(
-                                              fontSize: 11, color: AppColors.textMuted)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    flag.note.isEmpty
-                                        ? 'No additional notes were added.'
-                                        : '"${flag.note}"',
-                                    style: const TextStyle(
-                                        fontStyle: FontStyle.italic, fontSize: 13),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Wrap(
-                                    spacing: 8,
-                                    children: [
-                                      PillBadge(
-                                        label: flag.category.label,
-                                        color: flag.category.accent,
-                                        filled: false,
+                                            fontSize: 11,
+                                            color: AppColors.textMuted,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      flag.note.isEmpty
+                                          ? 'No additional notes were added.'
+                                          : '"${flag.note}"',
+                                      style: const TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 13,
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Wrap(
+                                      spacing: 8,
+                                      children: [
+                                        PillBadge(
+                                          label: flag.category.label,
+                                          color: flag.category.accent,
+                                          filled: false,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -271,14 +338,16 @@ class CaseDetailsScreen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => SelectInterventionScreen(flag: flag, user: user),
+                          builder: (_) =>
+                              SelectInterventionScreen(flag: flag, user: user),
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.principalPurple,
                         foregroundColor: Colors.white,
-                        shape:
-                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       icon: const Icon(Icons.warning_amber_rounded, size: 18),
                       label: const Text('Select Intervention'),
@@ -296,7 +365,10 @@ class CaseDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: AppBottomNav(currentIndex: 2, onTap: (i) => _onNavTap(context, i)),
+      bottomNavigationBar: AppBottomNav(
+        currentIndex: 2,
+        onTap: (i) => _onNavTap(context, i),
+      ),
     );
   }
 }
@@ -324,7 +396,10 @@ class _SeverityTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -332,16 +407,29 @@ class _SeverityTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Icon(icon, color: iconColor, size: 20),
-              Text(tag,
-                  style: TextStyle(
-                      color: tagColor, fontWeight: FontWeight.w700, fontSize: 11)),
+              Text(
+                tag,
+                style: TextStyle(
+                  color: tagColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: iconColor)),
-          Text(caption, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: iconColor,
+            ),
+          ),
+          Text(
+            caption,
+            style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+          ),
         ],
       ),
     );
