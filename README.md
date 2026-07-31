@@ -44,6 +44,181 @@ IJISHO is a Flutter mobile app that helps Rwandan schools identify and support s
 
 ---
 
+## Getting Started
+
+### Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+- **Flutter SDK** (3.x or later) — [Install Flutter](https://docs.flutter.dev/get-started/install)
+- **Dart SDK** 3.11+ (comes bundled with Flutter)
+- **Android Studio** or **VS Code** with the Flutter and Dart plugins
+- **Git**
+- **Node.js** (v18+) and **npm** — needed for the Firebase CLI and seed script
+- **A Firebase account** — [console.firebase.google.com](https://console.firebase.google.com)
+
+Verify your Flutter setup:
+```bash
+flutter doctor
+```
+All checkmarks should be green before continuing.
+
+---
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Kellia855/ijisho_app.git
+cd ijisho_app
+```
+
+---
+
+### 2. Install Flutter dependencies
+
+```bash
+flutter pub get
+```
+
+---
+
+### 3. Create a Firebase project
+
+1. Go to [console.firebase.google.com](https://console.firebase.google.com) and click **Add project**
+2. Give it a name (e.g. `ijisho-dev`) and follow the setup wizard
+3. Inside the project, enable the following services:
+
+**Authentication**
+- Go to **Build → Authentication → Get started**
+- Enable **Email/Password** under Sign-in providers
+- Enable **Google** under Sign-in providers (you'll need a support email)
+
+**Firestore Database**
+- Go to **Build → Firestore Database → Create database**
+- Start in **production mode** (the rules in this repo will handle access)
+- Choose a region close to Rwanda (e.g. `europe-west1`)
+
+**Storage**
+- Go to **Build → Storage → Get started**
+- Start in **production mode**
+- Use the same region as Firestore
+
+---
+
+### 4. Connect Firebase to the app
+
+Install the FlutterFire CLI:
+```bash
+dart pub global activate flutterfire_cli
+```
+
+Run the configuration command from the project root:
+```bash
+flutterfire configure
+```
+
+- Select the Firebase project you just created
+- Select the platforms you want to support (Android, iOS, etc.)
+
+This generates `lib/firebase_options.dart` with your project's credentials. This file is gitignored — **never commit it**.
+
+For Android, also make sure `android/app/google-services.json` is present (FlutterFire places it automatically). This file is also gitignored.
+
+---
+
+### 5. Install the Firebase CLI
+
+```bash
+npm install -g firebase-tools
+firebase login
+```
+
+Link the project folder to your Firebase project:
+```bash
+firebase use --add
+```
+Pick the same project you used in step 3.
+
+---
+
+### 6. Deploy Firestore rules and indexes
+
+```bash
+firebase deploy --only firestore:rules,firestore:indexes
+```
+
+This deploys:
+- `firestore.rules` — security rules that enforce teacher/principal access boundaries
+- `firestore.indexes.json` — composite indexes required for school-scoped queries
+
+> Indexes take a few minutes to finish building in the Firebase console after deploying. Queries will fail with a "requires an index" error until they're ready.
+
+Deploy Storage rules separately:
+```bash
+firebase deploy --only storage
+```
+
+---
+
+### 7. Seed sample data (optional but recommended)
+
+The seed script creates sample students and flags so you have real data to work with during development.
+
+Install the admin SDK:
+```bash
+npm install firebase-admin
+```
+
+**Option A — Local emulator (recommended, won't touch real data):**
+```bash
+firebase emulators:start --only firestore
+FIRESTORE_EMULATOR_HOST=localhost:8080 node scripts/seed_firestore.js
+```
+
+**Option B — Real dev project:**
+- Go to Firebase Console → Project Settings → Service Accounts → Generate new private key
+- Save the file as `serviceAccountKey.json` in the project root (it's gitignored)
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json node scripts/seed_firestore.js
+```
+
+> Sign up as a teacher in the app first, then paste that account's UID into `TEACHER_UID` at the top of `scripts/seed_firestore.js` — the seeded flags need a real `teacherUid` to satisfy the security rules.
+
+---
+
+### 8. Run the app
+
+```bash
+flutter run
+```
+
+For a specific device:
+```bash
+flutter run -d <device-id>
+```
+
+List available devices:
+```bash
+flutter devices
+```
+
+---
+
+### Building a release APK
+
+```bash
+flutter build apk --release
+```
+
+Output: `build/app/outputs/flutter-apk/app-release.apk`
+
+Install directly to a connected device:
+```bash
+flutter install --release
+```
+
+---
+
 ## Project Structure
 
 ```
@@ -143,61 +318,6 @@ lib/
 
 ---
 
-## Setup
-
-### 1. Flutter
-```bash
-flutter doctor
-```
-
-### 2. Firebase project
-- Go to https://console.firebase.google.com
-- Enable **Authentication → Email/Password** and **Google**
-- Create a **Firestore Database**
-- Enable **Storage**
-
-### 3. Connect Firebase to the app
-```bash
-dart pub global activate flutterfire_cli
-flutterfire configure
-```
-This generates `lib/firebase_options.dart` (gitignored — never commit it).
-
-### 4. Install dependencies
-```bash
-flutter pub get
-```
-
-### 5. Deploy Firestore rules and indexes
-```bash
-npm install -g firebase-tools
-firebase login
-firebase use --add        # link to your Firebase project
-firebase deploy --only firestore:rules,firestore:indexes
-firebase deploy --only storage
-```
-Indexes take a few minutes to build after deploying.
-
-### 6. Seed sample data (optional)
-```bash
-npm install firebase-admin
-
-# Against the local emulator (recommended):
-firebase emulators:start --only firestore
-FIRESTORE_EMULATOR_HOST=localhost:8080 node scripts/seed_firestore.js
-
-# Or against your real dev project (needs a service account key):
-GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json node scripts/seed_firestore.js
-```
-Sign up as a teacher first and paste that account's UID into `TEACHER_UID` at the top of the script.
-
-### 7. Run
-```bash
-flutter run
-```
-
----
-
 ## Firestore Security Rules Summary
 
 | Collection | Read | Write |
@@ -234,9 +354,11 @@ flutter run
 ---
 
 ## Running Tests
+
 ```bash
 flutter test
 ```
+
 The widget test renders `RoleSelectScreen` in isolation (no Firebase init required) wrapped in `ProviderScope`.
 
 ---
