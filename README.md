@@ -236,7 +236,7 @@ Sign up as a teacher in the app first and paste that account's uid into
   Teacher Dashboard, and Flagging History now actually works and covers
   the most-visible strings (nav labels, headers, buttons). Less-visible
   screens (Case Details, Select Intervention, Analytics, Login/Signup
-  body text) still show English only — extending coverage is just
+  body text) still show English only extending coverage is just
   adding entries to `lib/localization/app_strings.dart` and wrapping
   more screens' `build()` in the same `ValueListenableBuilder<AppLanguage>`
   pattern already used elsewhere.
