@@ -1,6 +1,6 @@
-# IJISHO — Student Early Warning System
+# IJISHO Mobile Application
 
-IJISHO is a Flutter mobile app that helps Rwandan schools identify and support students at risk of dropping out. Teachers flag student concerns in real time; principals review cases, assign interventions, and track outcomes through an analytics dashboard — all backed by Firebase.
+IJISHO is a Flutter mobile app that helps Rwandan schools identify and support students at risk of dropping out. Teachers flag student concerns in real time; principals review cases, assign interventions and track outcomes through an analytics dashboard — all backed by Firebase.
 
 ---
 
@@ -363,6 +363,10 @@ The widget test renders `RoleSelectScreen` in isolation (no Firebase init requir
 
 ---
 
-## Contributing
+## Contributors
 
-Branch naming: `main` (stable), `kuda`, `shema`, `aurore`, `oriane`, `kellia` (feature branches per team member). Open a PR into `main` when a feature is ready.
+**Kellia Kamikazi**
+**Oriane Uwineza**
+**Emanuele Shema**
+**Aurore Umumararungu**
+**Kudakwashe Chikovo**
