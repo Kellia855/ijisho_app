@@ -33,17 +33,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Future<void> _changePhoto() async {
     setState(() => _isUploading = true);
     try {
-      final url = await ref.read(storageServiceProvider).pickAndUpload(
-            'profile_photos/${widget.user.uid}.jpg',
-          );
+      final url = await ref
+          .read(storageServiceProvider)
+          .pickAndUpload('profile_photos/${widget.user.uid}.jpg');
       if (url != null) {
-        await ref.read(authServiceProvider).updatePhotoUrl(widget.user.uid, url);
+        await ref
+            .read(authServiceProvider)
+            .updatePhotoUrl(widget.user.uid, url);
         if (mounted) setState(() => _photoUrl = url);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Could not update photo: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not update photo: $e')));
       }
     } finally {
       if (mounted) setState(() => _isUploading = false);
@@ -55,7 +58,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Log out?'),
-        content: const Text('You\'ll need to sign in again to access your dashboard.'),
+        content: const Text(
+          'You\'ll need to sign in again to access your dashboard.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -84,8 +89,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final isPrincipal = widget.user.role == UserRole.principal;
-    final accent = isPrincipal ? AppColors.principalPurple : AppColors.teacherGreen;
-    final accentLight = isPrincipal ? AppColors.principalPurpleLight : AppColors.teacherGreenLight;
+    final accent = isPrincipal
+        ? AppColors.principalPurple
+        : AppColors.teacherGreen;
+    final accentLight = isPrincipal
+        ? AppColors.principalPurpleLight
+        : AppColors.teacherGreenLight;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
@@ -112,13 +121,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         children: [
                           IconButton(
                             onPressed: () => Navigator.of(context).pop(),
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
                           ),
-                          const Text('Profile',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18)),
+                          const Text(
+                            'Profile',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -140,9 +155,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                    color: Color(0x33000000),
-                                    blurRadius: 12,
-                                    offset: Offset(0, 4)),
+                                  color: Color(0x33000000),
+                                  blurRadius: 12,
+                                  offset: Offset(0, 4),
+                                ),
                               ],
                             ),
                             child: CircleAvatar(
@@ -150,8 +166,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               backgroundColor: accentLight,
                               backgroundImage:
                                   (_photoUrl != null && _photoUrl!.isNotEmpty)
-                                      ? NetworkImage(_photoUrl!)
-                                      : null,
+                                  ? NetworkImage(_photoUrl!)
+                                  : null,
                               child: (_photoUrl == null || _photoUrl!.isEmpty)
                                   ? Icon(Icons.person, size: 40, color: accent)
                                   : null,
@@ -165,7 +181,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               decoration: BoxDecoration(
                                 color: accent,
                                 shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 2),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
                               ),
                               child: _isUploading
                                   ? const SizedBox(
@@ -176,7 +195,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         color: Colors.white,
                                       ),
                                     )
-                                  : const Icon(Icons.camera_alt, size: 15, color: Colors.white),
+                                  : const Icon(
+                                      Icons.camera_alt,
+                                      size: 15,
+                                      color: Colors.white,
+                                    ),
                             ),
                           ),
                         ],
@@ -192,13 +215,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 Center(
-                  child: Text(widget.user.fullName,
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    widget.user.fullName,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: accentLight,
                       borderRadius: BorderRadius.circular(20),
@@ -214,46 +245,62 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 28),
-                const Text('ACCOUNT INFORMATION',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textMuted,
-                        letterSpacing: 0.6)),
+                const Text(
+                  'ACCOUNT INFORMATION',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textMuted,
+                    letterSpacing: 0.6,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 _InfoCard(
                   accent: accent,
                   rows: [
-                    _InfoRow(icon: Icons.mail_outline, label: 'Email', value: widget.user.email),
+                    _InfoRow(
+                      icon: Icons.mail_outline,
+                      label: 'Email',
+                      value: widget.user.email,
+                    ),
                     if (widget.user.employeeId != null)
                       _InfoRow(
-                          icon: Icons.badge_outlined,
-                          label: 'Employee ID',
-                          value: widget.user.employeeId!),
+                        icon: Icons.badge_outlined,
+                        label: 'Employee ID',
+                        value: widget.user.employeeId!,
+                      ),
                     if (widget.user.schoolName != null)
                       _InfoRow(
-                          icon: Icons.school_outlined,
-                          label: 'School',
-                          value: widget.user.schoolName!),
+                        icon: Icons.school_outlined,
+                        label: 'School',
+                        value: widget.user.schoolName!,
+                      ),
                   ],
                 ),
                 const SizedBox(height: 20),
-                const Text('PREFERENCES',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textMuted,
-                        letterSpacing: 0.6)),
+                const Text(
+                  'PREFERENCES',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textMuted,
+                    letterSpacing: 0.6,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 _InfoCard(
                   accent: accent,
                   rows: const [
                     _InfoRow(
-                        icon: Icons.notifications_outlined,
-                        label: 'Notifications',
-                        value: 'Enabled'),
+                      icon: Icons.notifications_outlined,
+                      label: 'Notifications',
+                      value: 'Enabled',
+                    ),
                     _InfoRow(
-                        icon: Icons.language_outlined, label: 'Language', value: 'English'),
+                      icon: Icons.language_outlined,
+                      label: 'Language',
+                      value: 'English',
+                    ),
                   ],
                 ),
                 const SizedBox(height: 28),
@@ -265,10 +312,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.urgentRed,
                       side: const BorderSide(color: AppColors.urgentRed),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     icon: const Icon(Icons.logout),
-                    label: const Text('Log out', style: TextStyle(fontWeight: FontWeight.w600)),
+                    label: const Text(
+                      'Log out',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
               ]),
@@ -316,12 +368,21 @@ class _InfoCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(rows[i].label,
-                            style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                        Text(
+                          rows[i].label,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textMuted,
+                          ),
+                        ),
                         const SizedBox(height: 2),
-                        Text(rows[i].value,
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w600)),
+                        Text(
+                          rows[i].value,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -340,5 +401,9 @@ class _InfoRow {
   final String label;
   final String value;
 
-  const _InfoRow({required this.icon, required this.label, required this.value});
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 }

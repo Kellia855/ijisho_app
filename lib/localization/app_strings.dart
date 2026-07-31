@@ -20,7 +20,9 @@ const _translations = <String, Map<AppLanguage, String>>{
     AppLanguage.kinyarwanda: 'Andika ibibazo by\'umunyeshuri vuba',
   },
   'Principal': {AppLanguage.kinyarwanda: 'Umuyobozi'},
-  'Monitor and take action': {AppLanguage.kinyarwanda: 'Kurikirana kandi ufate ingamba'},
+  'Monitor and take action': {
+    AppLanguage.kinyarwanda: 'Kurikirana kandi ufate ingamba',
+  },
 
   // Common headers
   'IJISHO': {AppLanguage.kinyarwanda: 'IJISHO'},

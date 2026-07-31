@@ -19,7 +19,11 @@ class StudentProfileScreen extends ConsumerWidget {
   final Student student;
   final AppUser viewer;
 
-  const StudentProfileScreen({super.key, required this.student, required this.viewer});
+  const StudentProfileScreen({
+    super.key,
+    required this.student,
+    required this.viewer,
+  });
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
     final confirmed = await showDialog<bool>(
@@ -56,16 +60,18 @@ class StudentProfileScreen extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Could not remove student: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not remove student: $e')));
       }
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accent =
-        viewer.role == UserRole.teacher ? AppColors.teacherGreen : AppColors.principalPurple;
+    final accent = viewer.role == UserRole.teacher
+        ? AppColors.teacherGreen
+        : AppColors.principalPurple;
     final flagsAsync = ref.watch(studentFlagsStreamProvider(student.fullName));
 
     return Scaffold(
@@ -86,11 +92,17 @@ class StudentProfileScreen extends ConsumerWidget {
                     radius: 18,
                     backgroundColor: Colors.white24,
                     backgroundImage:
-                        (student.photoUrl != null && student.photoUrl!.isNotEmpty)
-                            ? NetworkImage(student.photoUrl!)
-                            : null,
-                    child: (student.photoUrl == null || student.photoUrl!.isEmpty)
-                        ? const Icon(Icons.person, color: Colors.white, size: 18)
+                        (student.photoUrl != null &&
+                            student.photoUrl!.isNotEmpty)
+                        ? NetworkImage(student.photoUrl!)
+                        : null,
+                    child:
+                        (student.photoUrl == null || student.photoUrl!.isEmpty)
+                        ? const Icon(
+                            Icons.person,
+                            color: Colors.white,
+                            size: 18,
+                          )
                         : null,
                   ),
                   const SizedBox(width: 10),
@@ -98,11 +110,21 @@ class StudentProfileScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(student.fullName,
-                            style: const TextStyle(
-                                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                        Text(student.gradeSection,
-                            style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                        Text(
+                          student.fullName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          student.gradeSection,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -113,7 +135,8 @@ class StudentProfileScreen extends ConsumerWidget {
                         if (value == 'edit') {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => AddStudentScreen(student: student),
+                              builder: (_) =>
+                                  AddStudentScreen(student: student),
                             ),
                           );
                         } else if (value == 'delete') {
@@ -135,9 +158,16 @@ class StudentProfileScreen extends ConsumerWidget {
                           value: 'delete',
                           child: Row(
                             children: [
-                              Icon(Icons.delete_outline, size: 18, color: AppColors.urgentRed),
+                              Icon(
+                                Icons.delete_outline,
+                                size: 18,
+                                color: AppColors.urgentRed,
+                              ),
                               SizedBox(width: 10),
-                              Text('Delete', style: TextStyle(color: AppColors.urgentRed)),
+                              Text(
+                                'Delete',
+                                style: TextStyle(color: AppColors.urgentRed),
+                              ),
                             ],
                           ),
                         ),
@@ -161,8 +191,13 @@ class StudentProfileScreen extends ConsumerWidget {
                           ),
                         )
                       else ...[
-                        Text('${flags.length} flag${flags.length == 1 ? '' : 's'} on record',
-                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                        Text(
+                          '${flags.length} flag${flags.length == 1 ? '' : 's'} on record',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 15,
+                          ),
+                        ),
                         const SizedBox(height: 12),
                         ...flags.map((f) => _HistoryCard(flag: f)),
                       ],
@@ -170,7 +205,8 @@ class StudentProfileScreen extends ConsumerWidget {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Could not load flags: $e')),
+                error: (e, _) =>
+                    Center(child: Text('Could not load flags: $e')),
               ),
             ),
           ],
@@ -187,7 +223,10 @@ class StudentProfileScreen extends ConsumerWidget {
                 preselectedStudent: student,
               ),
               icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('Log Issue', style: TextStyle(color: Colors.white)),
+              label: const Text(
+                'Log Issue',
+                style: TextStyle(color: Colors.white),
+              ),
             )
           : null,
     );
@@ -217,35 +256,61 @@ class _HistoryCard extends StatelessWidget {
               Container(
                 width: 36,
                 height: 36,
-                decoration: BoxDecoration(color: flag.category.bg, shape: BoxShape.circle),
-                child: Icon(flag.category.icon, color: flag.category.accent, size: 18),
+                decoration: BoxDecoration(
+                  color: flag.category.bg,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  flag.category.icon,
+                  color: flag.category.accent,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(flag.category.label,
-                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                    Text('by ${flag.teacherName.isEmpty ? "Unknown" : flag.teacherName}',
-                        style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                    Text(
+                      flag.category.label,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      'by ${flag.teacherName.isEmpty ? "Unknown" : flag.teacherName}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
                   ],
                 ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  PillBadge(label: flag.severity.label, color: flag.severity.color),
+                  PillBadge(
+                    label: flag.severity.label,
+                    color: flag.severity.color,
+                  ),
                   const SizedBox(height: 4),
-                  PillBadge(label: flag.status.label, color: flag.status.color, filled: false),
+                  PillBadge(
+                    label: flag.status.label,
+                    color: flag.status.color,
+                    filled: false,
+                  ),
                 ],
               ),
             ],
           ),
           if (flag.note.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text('"${flag.note}"',
-                style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 13)),
+            Text(
+              '"${flag.note}"',
+              style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+            ),
           ],
           const SizedBox(height: 6),
           Text(
@@ -254,9 +319,14 @@ class _HistoryCard extends StatelessWidget {
           ),
           if (flag.interventionType != null) ...[
             const SizedBox(height: 6),
-            Text('Intervention: ${flag.interventionType}',
-                style: const TextStyle(
-                    fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.principalPurple)),
+            Text(
+              'Intervention: ${flag.interventionType}',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.principalPurple,
+              ),
+            ),
           ],
         ],
       ),

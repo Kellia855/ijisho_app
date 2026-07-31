@@ -65,8 +65,9 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Could not remove student: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not remove student: $e')));
       }
     }
   }
@@ -74,8 +75,12 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
   @override
   Widget build(BuildContext context) {
     final isPrincipal = widget.user.role == UserRole.principal;
-    final accent = isPrincipal ? AppColors.principalPurple : AppColors.teacherGreen;
-    final studentsAsync = ref.watch(studentsStreamProvider(widget.user.schoolName));
+    final accent = isPrincipal
+        ? AppColors.principalPurple
+        : AppColors.teacherGreen;
+    final studentsAsync = ref.watch(
+      studentsStreamProvider(widget.user.schoolName),
+    );
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
@@ -135,24 +140,33 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
                         leading: CircleAvatar(
                           backgroundColor: accent.withValues(alpha: 0.12),
                           backgroundImage:
-                              (student.photoUrl != null && student.photoUrl!.isNotEmpty)
-                                  ? NetworkImage(student.photoUrl!)
-                                  : null,
-                          child: (student.photoUrl == null || student.photoUrl!.isEmpty)
+                              (student.photoUrl != null &&
+                                  student.photoUrl!.isNotEmpty)
+                              ? NetworkImage(student.photoUrl!)
+                              : null,
+                          child:
+                              (student.photoUrl == null ||
+                                  student.photoUrl!.isEmpty)
                               ? Icon(Icons.person, color: accent)
                               : null,
                         ),
-                        title: Text(student.fullName,
-                            style: const TextStyle(fontWeight: FontWeight.w600)),
+                        title: Text(
+                          student.fullName,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
                         subtitle: Text(student.gradeSection),
                         trailing: isPrincipal
                             ? PopupMenuButton<String>(
-                                icon: const Icon(Icons.more_vert, color: AppColors.textMuted),
+                                icon: const Icon(
+                                  Icons.more_vert,
+                                  color: AppColors.textMuted,
+                                ),
                                 onSelected: (value) {
                                   if (value == 'edit') {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (_) => AddStudentScreen(student: student),
+                                        builder: (_) =>
+                                            AddStudentScreen(student: student),
                                       ),
                                     );
                                   } else if (value == 'delete') {
@@ -174,21 +188,33 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
                                     value: 'delete',
                                     child: Row(
                                       children: [
-                                        Icon(Icons.delete_outline,
-                                            size: 18, color: AppColors.urgentRed),
+                                        Icon(
+                                          Icons.delete_outline,
+                                          size: 18,
+                                          color: AppColors.urgentRed,
+                                        ),
                                         SizedBox(width: 10),
-                                        Text('Delete',
-                                            style: TextStyle(color: AppColors.urgentRed)),
+                                        Text(
+                                          'Delete',
+                                          style: TextStyle(
+                                            color: AppColors.urgentRed,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
                                 ],
                               )
-                            : const Icon(Icons.chevron_right, color: AppColors.textMuted),
+                            : const Icon(
+                                Icons.chevron_right,
+                                color: AppColors.textMuted,
+                              ),
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) =>
-                                StudentProfileScreen(student: student, viewer: widget.user),
+                            builder: (_) => StudentProfileScreen(
+                              student: student,
+                              viewer: widget.user,
+                            ),
                           ),
                         ),
                       ),
@@ -197,7 +223,8 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Could not load students: $e')),
+              error: (e, _) =>
+                  Center(child: Text('Could not load students: $e')),
             ),
           ),
         ],
@@ -206,7 +233,10 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
           ? FloatingActionButton(
               backgroundColor: accent,
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => AddStudentScreen(schoolName: widget.user.schoolName)),
+                MaterialPageRoute(
+                  builder: (_) =>
+                      AddStudentScreen(schoolName: widget.user.schoolName),
+                ),
               ),
               child: const Icon(Icons.add, color: Colors.white),
             )

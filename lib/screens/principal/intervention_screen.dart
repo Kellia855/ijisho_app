@@ -59,7 +59,9 @@ class _InterventionScreenState extends ConsumerState<InterventionScreen>
 
   @override
   Widget build(BuildContext context) {
-    final flagsAsync = ref.watch(allFlagsStreamProvider(widget.user.schoolName));
+    final flagsAsync = ref.watch(
+      allFlagsStreamProvider(widget.user.schoolName),
+    );
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
@@ -71,9 +73,14 @@ class _InterventionScreenState extends ConsumerState<InterventionScreen>
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: const Row(
                 children: [
-                  Text('Intervention',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text(
+                    'Intervention',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -85,7 +92,10 @@ class _InterventionScreenState extends ConsumerState<InterventionScreen>
                 indicatorWeight: 3,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white60,
-                labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                ),
                 tabs: const [
                   Tab(text: 'Needs Action'),
                   Tab(text: 'Resolved'),
@@ -95,16 +105,23 @@ class _InterventionScreenState extends ConsumerState<InterventionScreen>
             Expanded(
               child: flagsAsync.when(
                 data: (allFlags) {
-                  final needsAction = allFlags
-                      .where((f) =>
-                          f.status == FlagStatus.reported ||
-                          f.status == FlagStatus.underReview)
-                      .toList()
-                    ..sort((a, b) => b.severity.index.compareTo(a.severity.index));
-                  final resolved = allFlags
-                      .where((f) => f.status == FlagStatus.resolved)
-                      .toList()
-                    ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+                  final needsAction =
+                      allFlags
+                          .where(
+                            (f) =>
+                                f.status == FlagStatus.reported ||
+                                f.status == FlagStatus.underReview,
+                          )
+                          .toList()
+                        ..sort(
+                          (a, b) =>
+                              b.severity.index.compareTo(a.severity.index),
+                        );
+                  final resolved =
+                      allFlags
+                          .where((f) => f.status == FlagStatus.resolved)
+                          .toList()
+                        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
                   return TabBarView(
                     controller: _tabController,
@@ -148,7 +165,11 @@ class _CaseList extends StatelessWidget {
   final String emptyText;
   final AppUser user;
 
-  const _CaseList({required this.flags, required this.emptyText, required this.user});
+  const _CaseList({
+    required this.flags,
+    required this.emptyText,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -156,9 +177,11 @@ class _CaseList extends StatelessWidget {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Text(emptyText,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textMuted)),
+          child: Text(
+            emptyText,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: AppColors.textMuted),
+          ),
         ),
       );
     }
@@ -166,7 +189,8 @@ class _CaseList extends StatelessWidget {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 90),
       itemCount: flags.length,
-      itemBuilder: (context, index) => _InterventionCard(flag: flags[index], user: user),
+      itemBuilder: (context, index) =>
+          _InterventionCard(flag: flags[index], user: user),
     );
   }
 }
@@ -181,7 +205,9 @@ class _InterventionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => CaseDetailsScreen(flag: flag, user: user)),
+        MaterialPageRoute(
+          builder: (_) => CaseDetailsScreen(flag: flag, user: user),
+        ),
       ),
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
@@ -200,10 +226,13 @@ class _InterventionCard extends StatelessWidget {
                   radius: 20,
                   backgroundColor: flag.category.bg,
                   backgroundImage:
-                      (flag.studentPhotoUrl != null && flag.studentPhotoUrl!.isNotEmpty)
-                          ? NetworkImage(flag.studentPhotoUrl!)
-                          : null,
-                  child: (flag.studentPhotoUrl == null || flag.studentPhotoUrl!.isEmpty)
+                      (flag.studentPhotoUrl != null &&
+                          flag.studentPhotoUrl!.isNotEmpty)
+                      ? NetworkImage(flag.studentPhotoUrl!)
+                      : null,
+                  child:
+                      (flag.studentPhotoUrl == null ||
+                          flag.studentPhotoUrl!.isEmpty)
                       ? Icon(Icons.person, color: flag.category.accent)
                       : null,
                 ),
@@ -212,19 +241,36 @@ class _InterventionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(flag.studentName,
-                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                      Text(flag.gradeSection,
-                          style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                      Text(
+                        flag.studentName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        flag.gradeSection,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    PillBadge(label: flag.severity.label, color: flag.severity.color),
+                    PillBadge(
+                      label: flag.severity.label,
+                      color: flag.severity.color,
+                    ),
                     const SizedBox(height: 4),
-                    PillBadge(label: flag.status.label, color: flag.status.color, filled: false),
+                    PillBadge(
+                      label: flag.status.label,
+                      color: flag.status.color,
+                      filled: false,
+                    ),
                   ],
                 ),
               ],
@@ -232,19 +278,37 @@ class _InterventionCard extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                PillBadge(label: flag.category.label, color: flag.category.accent, filled: false),
+                PillBadge(
+                  label: flag.category.label,
+                  color: flag.category.accent,
+                  filled: false,
+                ),
                 const Spacer(),
-                Icon(Icons.calendar_today_outlined, size: 12, color: AppColors.textMuted),
+                Icon(
+                  Icons.calendar_today_outlined,
+                  size: 12,
+                  color: AppColors.textMuted,
+                ),
                 const SizedBox(width: 4),
-                Text(DateFormat('MMM d, yyyy').format(flag.createdAt),
-                    style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                Text(
+                  DateFormat('MMM d, yyyy').format(flag.createdAt),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textMuted,
+                  ),
+                ),
               ],
             ),
             if (flag.interventionType != null) ...[
               const SizedBox(height: 8),
-              Text('Intervention: ${flag.interventionType}',
-                  style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.principalPurple)),
+              Text(
+                'Intervention: ${flag.interventionType}',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.principalPurple,
+                ),
+              ),
             ],
           ],
         ),

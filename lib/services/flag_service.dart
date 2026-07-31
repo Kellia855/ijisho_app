@@ -11,7 +11,7 @@ class FlagService {
   final FirebaseFirestore _firestore;
 
   FlagService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _flagsRef =>
       _firestore.collection('flags');
@@ -28,10 +28,9 @@ class FlagService {
       query = query.where('schoolName', isEqualTo: schoolName);
     }
     return query.snapshots().map(
-          (snap) => snap.docs
-              .map((doc) => Student.fromMap(doc.id, doc.data()))
-              .toList(),
-        );
+      (snap) =>
+          snap.docs.map((doc) => Student.fromMap(doc.id, doc.data())).toList(),
+    );
   }
 
   /// Flags submitted by one teacher, newest first — powers the
@@ -47,14 +46,22 @@ class FlagService {
   /// All flags for a specific school, newest first — powers the principal
   /// dashboard and analytics screen.
   Stream<List<StudentFlag>> streamAllFlags({String? schoolName}) {
-    Query<Map<String, dynamic>> query = _flagsRef.orderBy('createdAt', descending: true);
+    Query<Map<String, dynamic>> query = _flagsRef.orderBy(
+      'createdAt',
+      descending: true,
+    );
     if (schoolName != null && schoolName.isNotEmpty) {
       query = query.where('schoolName', isEqualTo: schoolName);
     }
-    return query.snapshots().map((snap) => snap.docs
-        .map((doc) => StudentFlag.fromDoc(
-            doc as DocumentSnapshot<Map<String, dynamic>>))
-        .toList());
+    return query.snapshots().map(
+      (snap) => snap.docs
+          .map(
+            (doc) => StudentFlag.fromDoc(
+              doc as DocumentSnapshot<Map<String, dynamic>>,
+            ),
+          )
+          .toList(),
+    );
   }
 
   Future<void> createFlag(StudentFlag flag) async {

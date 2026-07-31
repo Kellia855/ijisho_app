@@ -92,7 +92,9 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
     setState(() => _isSubmitting = true);
 
     try {
-      await ref.read(flagServiceProvider).createFlag(
+      await ref
+          .read(flagServiceProvider)
+          .createFlag(
             StudentFlag(
               id: '',
               studentName: _selectedStudent!.fullName,
@@ -111,9 +113,9 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not submit: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not submit: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -155,7 +157,10 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              const Text('Select Student', style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'Select Student',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               studentsAsync.when(
                 data: (students) => DropdownButtonFormField<Student>(
@@ -163,18 +168,24 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
                   isExpanded: true,
                   hint: const Text('-- Select Student --'),
                   items: students
-                      .map((s) => DropdownMenuItem(
-                            value: s,
-                            child: Text('${s.fullName} (${s.gradeSection})'),
-                          ))
+                      .map(
+                        (s) => DropdownMenuItem(
+                          value: s,
+                          child: Text('${s.fullName} (${s.gradeSection})'),
+                        ),
+                      )
                       .toList(),
-                  onChanged: (value) => setState(() => _selectedStudent = value),
+                  onChanged: (value) =>
+                      setState(() => _selectedStudent = value),
                 ),
                 loading: () => const LinearProgressIndicator(),
                 error: (e, _) => Text('Could not load students: $e'),
               ),
               const SizedBox(height: 16),
-              const Text('Issue Type', style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'Issue Type',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 10,
@@ -184,7 +195,8 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
                   return ChoiceChip(
                     label: Text(category.label),
                     selected: isSelected,
-                    onSelected: (_) => setState(() => _selectedCategory = category),
+                    onSelected: (_) =>
+                        setState(() => _selectedCategory = category),
                     selectedColor: category.accent,
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.white : AppColors.textDark,
@@ -196,7 +208,10 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
                 }).toList(),
               ),
               const SizedBox(height: 16),
-              const Text('How urgent is this?', style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'How urgent is this?',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 10,
@@ -205,7 +220,8 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
                   return ChoiceChip(
                     label: Text(severity.label),
                     selected: isSelected,
-                    onSelected: (_) => setState(() => _selectedSeverity = severity),
+                    onSelected: (_) =>
+                        setState(() => _selectedSeverity = severity),
                     selectedColor: severity.color,
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.white : AppColors.textDark,
@@ -217,7 +233,10 @@ class _LogIssueSheetState extends ConsumerState<LogIssueSheet> {
                 }).toList(),
               ),
               const SizedBox(height: 16),
-              const Text('Observation Note', style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'Observation Note',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               TextField(
                 controller: _noteController,

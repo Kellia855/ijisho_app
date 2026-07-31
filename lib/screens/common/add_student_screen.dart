@@ -26,10 +26,12 @@ class AddStudentScreen extends ConsumerStatefulWidget {
 
 class _AddStudentScreenState extends ConsumerState<AddStudentScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final _nameController =
-      TextEditingController(text: widget.student?.fullName ?? '');
-  late final _gradeController =
-      TextEditingController(text: widget.student?.gradeSection ?? '');
+  late final _nameController = TextEditingController(
+    text: widget.student?.fullName ?? '',
+  );
+  late final _gradeController = TextEditingController(
+    text: widget.student?.gradeSection ?? '',
+  );
 
   XFile? _pickedPhoto;
   Uint8List? _pickedPhotoBytes;
@@ -77,19 +79,24 @@ class _AddStudentScreenState extends ConsumerState<AddStudentScreen> {
       }
 
       if (_pickedPhoto != null) {
-        final photoUrl = await ref.read(storageServiceProvider).uploadFile(
-          'student_photos/$studentId.jpg',
-          _pickedPhoto!,
-        );
-        await ref.read(flagServiceProvider).updateStudentPhoto(studentId, photoUrl);
+        final photoUrl = await ref
+            .read(storageServiceProvider)
+            .uploadFile('student_photos/$studentId.jpg', _pickedPhoto!);
+        await ref
+            .read(flagServiceProvider)
+            .updateStudentPhoto(studentId, photoUrl);
       }
 
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text(
-                'Could not ${widget.isEditing ? 'update' : 'add'} student: $e')));
+              'Could not ${widget.isEditing ? 'update' : 'add'} student: $e',
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -123,13 +130,19 @@ class _AddStudentScreenState extends ConsumerState<AddStudentScreen> {
                         backgroundColor: AppColors.principalPurpleLight,
                         backgroundImage: _pickedPhotoBytes != null
                             ? MemoryImage(_pickedPhotoBytes!)
-                            : (existingPhotoUrl != null && existingPhotoUrl.isNotEmpty)
-                                ? NetworkImage(existingPhotoUrl) as ImageProvider
-                                : null,
-                        child: (_pickedPhotoBytes == null &&
-                                (existingPhotoUrl == null || existingPhotoUrl.isEmpty))
-                            ? const Icon(Icons.person,
-                                size: 36, color: AppColors.principalPurple)
+                            : (existingPhotoUrl != null &&
+                                  existingPhotoUrl.isNotEmpty)
+                            ? NetworkImage(existingPhotoUrl) as ImageProvider
+                            : null,
+                        child:
+                            (_pickedPhotoBytes == null &&
+                                (existingPhotoUrl == null ||
+                                    existingPhotoUrl.isEmpty))
+                            ? const Icon(
+                                Icons.person,
+                                size: 36,
+                                color: AppColors.principalPurple,
+                              )
                             : null,
                       ),
                       Positioned(
@@ -142,7 +155,11 @@ class _AddStudentScreenState extends ConsumerState<AddStudentScreen> {
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
-                          child: const Icon(Icons.camera_alt, size: 14, color: Colors.white),
+                          child: const Icon(
+                            Icons.camera_alt,
+                            size: 14,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -150,20 +167,32 @@ class _AddStudentScreenState extends ConsumerState<AddStudentScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('Full Name', style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'Full Name',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(hintText: 'e.g. Habimana Jean Paul'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+                decoration: const InputDecoration(
+                  hintText: 'e.g. Habimana Jean Paul',
+                ),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 16),
-              const Text('Grade / Section', style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'Grade / Section',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               TextFormField(
                 controller: _gradeController,
-                decoration: const InputDecoration(hintText: 'e.g. Grade 10 - Science A'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+                decoration: const InputDecoration(
+                  hintText: 'e.g. Grade 10 - Science A',
+                ),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 24),
               SizedBox(
@@ -174,13 +203,18 @@ class _AddStudentScreenState extends ConsumerState<AddStudentScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.principalPurple,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   child: _isSubmitting
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
                         )
                       : Text(widget.isEditing ? 'Save Changes' : 'Add Student'),
                 ),

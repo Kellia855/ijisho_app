@@ -15,8 +15,8 @@ class StorageService {
   final ImagePicker _picker;
 
   StorageService({FirebaseStorage? storage, ImagePicker? picker})
-      : _storage = storage ?? FirebaseStorage.instance,
-        _picker = picker ?? ImagePicker();
+    : _storage = storage ?? FirebaseStorage.instance,
+      _picker = picker ?? ImagePicker();
 
   /// Opens the gallery and returns the picked file without uploading —
   /// use this when you need to show a local preview before a Storage

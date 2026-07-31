@@ -56,7 +56,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       final appUser = await ref.read(authServiceProvider).signInWithGoogle();
       if (!mounted) return;
       if (appUser == null) {
-        final hasFirebaseUser = ref.read(authServiceProvider).currentUser != null;
+        final hasFirebaseUser =
+            ref.read(authServiceProvider).currentUser != null;
         if (!hasFirebaseUser) return; // cancelled — do nothing
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const GoogleRolePickerScreen()),
@@ -82,7 +83,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     if (!_agreedToTerms) {
-      setState(() => _errorText = 'Please agree to the Terms of Service and Privacy Policy.');
+      setState(
+        () => _errorText =
+            'Please agree to the Terms of Service and Privacy Policy.',
+      );
       return;
     }
 
@@ -92,13 +96,17 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     });
 
     try {
-      final appUser = await ref.read(authServiceProvider).signUp(
+      final appUser = await ref
+          .read(authServiceProvider)
+          .signUp(
             fullName: _fullNameController.text,
             email: _emailController.text,
             password: _passwordController.text,
             role: _isTeacher ? UserRole.teacher : UserRole.principal,
             employeeId: _isTeacher ? _secondaryController.text : null,
-            schoolName: _isTeacher ? _schoolNameController.text : _secondaryController.text,
+            schoolName: _isTeacher
+                ? _schoolNameController.text
+                : _secondaryController.text,
           );
 
       if (!mounted) return;
@@ -133,7 +141,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.arrow_back, size: 18),
                 label: const Text('Back'),
-                style: TextButton.styleFrom(foregroundColor: AppColors.textDark),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.textDark,
+                ),
               ),
               const SizedBox(height: 8),
               Center(
@@ -164,8 +174,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ),
               Center(
                 child: Text(
-                  _isTeacher ? 'Teacher Management Portal' : 'Principal Management Portal',
-                  style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+                  _isTeacher
+                      ? 'Teacher Management Portal'
+                      : 'Principal Management Portal',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textMuted,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -182,7 +197,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 _isTeacher
                     ? 'Register to begin logging student issues'
                     : 'Register your institution to begin management',
-                style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textMuted,
+                ),
               ),
               const SizedBox(height: 24),
               Form(
@@ -204,9 +222,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     TextFormField(
                       controller: _secondaryController,
                       decoration: InputDecoration(
-                        hintText: _isTeacher ? 'TCH-2024-001' : 'Groupe Scolaire Kigali',
+                        hintText: _isTeacher
+                            ? 'TCH-2024-001'
+                            : 'Groupe Scolaire Kigali',
                         prefixIcon: Icon(
-                          _isTeacher ? Icons.badge_outlined : Icons.school_outlined,
+                          _isTeacher
+                              ? Icons.badge_outlined
+                              : Icons.school_outlined,
                         ),
                       ),
                       validator: _requiredValidator,
@@ -254,8 +276,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 : Icons.visibility_off_outlined,
                             color: AppColors.textMuted,
                           ),
-                          onPressed: () =>
-                              setState(() => _obscurePassword = !_obscurePassword),
+                          onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                       ),
                       validator: (value) {
@@ -280,8 +303,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 : Icons.visibility_off_outlined,
                             color: AppColors.textMuted,
                           ),
-                          onPressed: () =>
-                              setState(() => _obscureConfirm = !_obscureConfirm),
+                          onPressed: () => setState(
+                            () => _obscureConfirm = !_obscureConfirm,
+                          ),
                         ),
                       ),
                       validator: (value) {
@@ -307,16 +331,25 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             child: Text.rich(
                               TextSpan(
                                 text: 'I agree to the ',
-                                style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: AppColors.textMuted,
+                                ),
                                 children: [
                                   TextSpan(
                                     text: 'Terms of Service',
-                                    style: TextStyle(color: accent, fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      color: accent,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                   const TextSpan(text: ' and '),
                                   TextSpan(
                                     text: 'Privacy Policy',
-                                    style: TextStyle(color: accent, fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      color: accent,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                   const TextSpan(text: '.'),
                                 ],
@@ -330,7 +363,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       const SizedBox(height: 4),
                       Text(
                         _errorText!,
-                        style: const TextStyle(color: AppColors.urgentRed, fontSize: 13),
+                        style: const TextStyle(
+                          color: AppColors.urgentRed,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                     const SizedBox(height: 16),
@@ -371,9 +407,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         const Expanded(child: Divider()),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text('OR',
-                              style: TextStyle(
-                                  fontSize: 12, color: AppColors.textMuted)),
+                          child: Text(
+                            'OR',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
                         ),
                         const Expanded(child: Divider()),
                       ],
@@ -393,14 +433,18 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            FaIcon(FontAwesomeIcons.google,
-                                size: 18, color: Color(0xFF4285F4)),
+                            FaIcon(
+                              FontAwesomeIcons.google,
+                              size: 18,
+                              color: Color(0xFF4285F4),
+                            ),
                             SizedBox(width: 10),
                             Text(
                               'Sign up with Google',
                               style: TextStyle(
-                                  color: AppColors.textDark,
-                                  fontWeight: FontWeight.w500),
+                                color: AppColors.textDark,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),
@@ -417,7 +461,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             children: [
                               TextSpan(
                                 text: 'Login',
-                                style: TextStyle(color: accent, fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                  color: accent,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
                           ),
@@ -434,13 +481,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.help_outline, size: 14, color: AppColors.textMuted),
+                    Icon(
+                      Icons.help_outline,
+                      size: 14,
+                      color: AppColors.textMuted,
+                    ),
                     SizedBox(width: 4),
-                    Text('Support', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                    Text(
+                      'Support',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
                     SizedBox(width: 20),
                     Icon(Icons.public, size: 14, color: AppColors.textMuted),
                     SizedBox(width: 4),
-                    Text('Kinyarwanda', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                    Text(
+                      'Kinyarwanda',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -452,9 +515,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _fieldLabel(String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: Text(text, style: const TextStyle(fontWeight: FontWeight.w600)),
-      );
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Text(text, style: const TextStyle(fontWeight: FontWeight.w600)),
+  );
 
   String? _requiredValidator(String? value) {
     if (value == null || value.trim().isEmpty) return 'Required';

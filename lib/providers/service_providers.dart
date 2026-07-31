@@ -8,4 +8,6 @@ final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
 final flagServiceProvider = Provider<FlagService>((ref) => FlagService());
 
-final storageServiceProvider = Provider<StorageService>((ref) => StorageService());
+final storageServiceProvider = Provider<StorageService>(
+  (ref) => StorageService(),
+);

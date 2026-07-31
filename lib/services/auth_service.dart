@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/app_user.dart';
 
-/// Thin wrapper around FirebaseAuth + Firestore 
+/// Thin wrapper around FirebaseAuth + Firestore
 class AuthService {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
@@ -12,8 +12,8 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   AuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
-      : _auth = auth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+    : _auth = auth ?? FirebaseAuth.instance,
+      _firestore = firestore ?? FirebaseFirestore.instance;
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
@@ -72,7 +72,7 @@ class AuthService {
     return AppUser.fromMap(credential.user!.uid, doc.data()!);
   }
 
-  // Returns null if the user cancelled or is new 
+  // Returns null if the user cancelled or is new
   Future<AppUser?> signInWithGoogle() async {
     final googleUser = await _googleSignIn.signIn();
     if (googleUser == null) return null; // cancelled — not an error
@@ -87,7 +87,7 @@ class AuthService {
     final uid = userCredential.user!.uid;
 
     final doc = await _usersRef.doc(uid).get();
-    if (!doc.exists) return null; 
+    if (!doc.exists) return null;
 
     return AppUser.fromMap(uid, doc.data()!);
   }
@@ -126,7 +126,6 @@ class AuthService {
     await _usersRef.doc(uid).update({'photoUrl': photoUrl});
   }
 
- 
   static String friendlyError(Object error) {
     if (error is FirebaseAuthException) {
       switch (error.code) {

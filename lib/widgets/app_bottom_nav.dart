@@ -43,7 +43,11 @@ class AppBottomNav extends ConsumerWidget {
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, -2)),
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 12,
+            offset: Offset(0, -2),
+          ),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -59,7 +63,10 @@ class AppBottomNav extends ConsumerWidget {
                 onTap: () => onTap(index),
                 behavior: HitTestBehavior.opaque,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: isActive ? activeColor : Colors.transparent,
                     borderRadius: BorderRadius.circular(20),

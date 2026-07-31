@@ -35,9 +35,11 @@ class _GoogleRolePickerScreenState
       return;
     }
     if (_secondaryController.text.trim().isEmpty) {
-      setState(() => _errorText = _selectedRole == UserRole.teacher
-          ? 'Please enter your Employee ID.'
-          : 'Please enter your School Name.');
+      setState(
+        () => _errorText = _selectedRole == UserRole.teacher
+            ? 'Please enter your Employee ID.'
+            : 'Please enter your School Name.',
+      );
       return;
     }
 
@@ -47,7 +49,9 @@ class _GoogleRolePickerScreenState
     });
 
     try {
-      final appUser = await ref.read(authServiceProvider).createGoogleProfile(
+      final appUser = await ref
+          .read(authServiceProvider)
+          .createGoogleProfile(
             role: _selectedRole!,
             employeeId: _selectedRole == UserRole.teacher
                 ? _secondaryController.text.trim()
@@ -132,9 +136,13 @@ class _GoogleRolePickerScreenState
                 const SizedBox(height: 16),
               ],
               if (_errorText != null) ...[
-                Text(_errorText!,
-                    style: const TextStyle(
-                        color: AppColors.urgentRed, fontSize: 13)),
+                Text(
+                  _errorText!,
+                  style: const TextStyle(
+                    color: AppColors.urgentRed,
+                    fontSize: 13,
+                  ),
+                ),
                 const SizedBox(height: 12),
               ],
               SizedBox(
@@ -154,7 +162,9 @@ class _GoogleRolePickerScreenState
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
-                              color: Colors.white, strokeWidth: 2),
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
                         )
                       : const Text('Continue'),
                 ),
@@ -206,17 +216,21 @@ class _RoleOption extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, color: color)),
-                  Text(subtitle,
-                      style: const TextStyle(
-                          fontSize: 12, color: AppColors.textMuted)),
+                  Text(
+                    label,
+                    style: TextStyle(fontWeight: FontWeight.w700, color: color),
+                  ),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
                 ],
               ),
             ),
-            if (selected)
-              Icon(Icons.check_circle, color: color, size: 20),
+            if (selected) Icon(Icons.check_circle, color: color, size: 20),
           ],
         ),
       ),
