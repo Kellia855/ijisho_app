@@ -1,4 +1,4 @@
-# IJISHO — Flutter App
+# IJISHO  Flutter App
 
 This covers the full flow from the Figma prototype: **role select → login
 → signup → teacher dashboard → flagging history → principal dashboard →
@@ -33,17 +33,17 @@ lib/
     login_screen.dart                      # Login as Teacher / Principal
     signup_screen.dart                     # Create account, role-specific fields
     teacher/
-      teacher_home_screen.dart             # Image 5 — dashboard
-      flagging_history_screen.dart         # Image 4 — history + search/filter
+      teacher_home_screen.dart             # Image 5  dashboard
+      flagging_history_screen.dart         # Image 4  history + search/filter
       log_issue_sheet.dart                 # bottom sheet to submit a flag
     principal/
-      principal_home_screen.dart           # Image 6 — dashboard
+      principal_home_screen.dart           # Image 6  dashboard
       case_details_screen.dart             # Image 7
       select_intervention_screen.dart      # Image 8
-      analytics_screen.dart                # Image 9/10/11 — charts (fl_chart)
+      analytics_screen.dart                # Image 9/10/11  charts (fl_chart)
     common/
-      profile_screen.dart                  # placeholder — not designed yet
-      students_placeholder_screen.dart     # placeholder — not designed yet
+      profile_screen.dart                  # placeholder  not designed yet
+      students_placeholder_screen.dart     # placeholder  not designed yet
 ```
 
 ## What's real vs. sample data
@@ -53,7 +53,7 @@ lib/
   select intervention writes back), Flagging History, Dropout Risk pie,
   Issue Breakdown, and the Total/At Risk/Urgent stat counts.
 - **Sample data (clearly labeled in the UI):** Attendance Trend and
-  Geographic Distribution on the Analytics screen — there's no
+  Geographic Distribution on the Analytics screen there's no
   attendance-taking feature built yet, so these use placeholder numbers
   until that data pipeline exists.
 
@@ -88,7 +88,7 @@ lib/
 
 ## Data model
 
-**`users/{uid}`** — written on signup:
+**`users/{uid}`** written on signup:
 
 ```json
 {
@@ -100,18 +100,18 @@ lib/
 }
 ```
 
-`AuthService.signIn` reads this doc after Firebase Auth succeeds, so the
+`AuthService.signIn`: reads this doc after Firebase Auth succeeds, so the
 app knows which dashboard to route to without a separate role-selection
 step at login.
 
-**`students/{id}`** — seed manually in the Firestore console for now,
+**`students/{id}`**: seed manually in the Firestore console for now,
 there's no "add student" screen in the current designs:
 
 ```json
 { "fullName": "Habimana Jean Paul", "gradeSection": "Grade 10 - Science A" }
 ```
 
-**`flags/{id}`** — created when a teacher submits the Log Student Issue
+**`flags/{id}`**: created when a teacher submits the Log Student Issue
 sheet, updated when a principal assigns an intervention:
 
 ```json
@@ -119,7 +119,7 @@ sheet, updated when a principal assigns an intervention:
   "studentName": "Habimana Jean Paul",
   "gradeSection": "Grade 10 - Science A",
   "category": "absent",           // absent | noUniform | noLunch | struggling | financial | academic | attendance | behavioral
-  "severity": "warning",          // urgent | warning | fine — set to "urgent" manually for now, see below
+  "severity": "warning",          // urgent | warning | fine  set to "urgent" manually for now, see below
   "status": "reported",           // reported | underReview | resolved
   "note": "Missed three afternoon sessions...",
   "teacherName": "Musoni Godfrey",
@@ -132,7 +132,7 @@ sheet, updated when a principal assigns an intervention:
 
 **Note on severity:** the Log Student Issue sheet now includes a
 "How urgent is this?" picker (Urgent/Warning/Fine), defaulting to
-Warning. `flagCountThisTerm` is still always `1` on creation though —
+Warning. `flagCountThisTerm` is still always `1` on creation though
 nothing increments it yet if the same student gets flagged again, so
 the "3rd flag this term" repeat-count feature on Case Details won't
 reflect reality until that's added.
@@ -147,9 +147,9 @@ Storage. A few things to know:
   ```
   firebase deploy --only storage
   ```
-  (You'll also need Storage enabled in the console — **Build → Storage
+  (You'll also need Storage enabled in the console **Build → Storage
   → Get started** — if you haven't used it before.)
-- **Platform permissions** — `image_picker` needs gallery-access
+- **Platform permissions** `image_picker` needs gallery-access
   permission declared natively:
   - **iOS**: add `NSPhotoLibraryUsageDescription` to `ios/Runner/Info.plist`
   - **Android**: usually works out of the box on modern Android via
@@ -199,16 +199,16 @@ firebase deploy --only firestore:rules,firestore:indexes
 Indexes can take a few minutes to build in the console after deploying.
 
 **4. What the rules enforce** (`firestore.rules`):
-- `users/{uid}` — anyone signed in can read (needed to check role after
+- `users/{uid}` : anyone signed in can read (needed to check role after
   login); a user can only create/update their own doc, and can't change
   their `role` after signup.
-- `students/{id}` — any signed-in staff member can read; only principals
+- `students/{id}` : any signed-in staff member can read; only principals
   can write (there's no student-management screen yet, so seed this
   collection yourself for now).
-- `flags/{id}` — any signed-in staff member can read; teachers can only
+- `flags/{id}` : any signed-in staff member can read; teachers can only
   create flags with their own `teacherUid` and `status: "reported"`;
   only principals can update, and only the `status`/`interventionType`
-  fields — so a principal can't silently rewrite a teacher's observation.
+  fields so a principal can't silently rewrite a teacher's observation.
 
 **5. Seed sample data** so the team isn't building against an empty
 database:
@@ -227,12 +227,12 @@ Firebase Console → Project Settings → Service Accounts:
 GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json node scripts/seed_firestore.js
 ```
 Sign up as a teacher in the app first and paste that account's uid into
-`TEACHER_UID` at the top of the script — the seeded flags need a real
+`TEACHER_UID` at the top of the script  the seeded flags need a real
 `teacherUid` to satisfy the security rules and show up correctly.
 
 ## Not yet built
 
-- **Full Kinyarwanda coverage** — the translate icon on Role Select,
+- **Full Kinyarwanda coverage**: the translate icon on Role Select,
   Teacher Dashboard, and Flagging History now actually works and covers
   the most-visible strings (nav labels, headers, buttons). Less-visible
   screens (Case Details, Select Intervention, Analytics, Login/Signup
@@ -240,11 +240,11 @@ Sign up as a teacher in the app first and paste that account's uid into
   adding entries to `lib/localization/app_strings.dart` and wrapping
   more screens' `build()` in the same `ValueListenableBuilder<AppLanguage>`
   pattern already used elsewhere.
-- **Attendance-taking feature** — needed before Attendance Trend and
+- **Attendance-taking feature**:  needed before Attendance Trend and
   Geographic Distribution on Analytics can use real data instead of
   samples
-- **Offline support** — explicitly out of scope for now
-- **Class assignments** — Students tab currently shows the same full
+- **Offline support**:  explicitly out of scope for now
+- **Class assignments**: Students tab currently shows the same full
   roster to every teacher and principal; if you want teachers scoped to
   just their own class, that needs a `classId` (or similar) added to
   both `Student` and the teacher's profile, plus a query filter
