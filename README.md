@@ -15,7 +15,7 @@ IJISHO is a Flutter mobile app that helps Rwandan schools identify and support s
 ### Principal Portal
 - Live dashboard of all flags school-wide, with severity badges
 - Case details view showing flag history per student
-- Assign interventions (counselling, fee waiver, home visit, etc.)
+- Assign interventions (counselling, fee waiver, etc)
 - Mark cases as resolved
 - Analytics screen: dropout risk pie chart, issue breakdown by category, at-risk counts
 
@@ -25,7 +25,7 @@ IJISHO is a Flutter mobile app that helps Rwandan schools identify and support s
 - Profile screen with photo upload to Firebase Storage
 - Student profile screen showing full flag history for any individual student
 - Partial Kinyarwanda / English toggle (role select, dashboards, nav)
-- School-scoped data isolation — each school only sees its own students and flags
+- School-scoped data isolation - each school only sees its own students and flags
 
 ---
 
