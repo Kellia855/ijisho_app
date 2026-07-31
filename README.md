@@ -148,7 +148,7 @@ Storage. A few things to know:
   firebase deploy --only storage
   ```
   (You'll also need Storage enabled in the console **Build → Storage
-  → Get started** — if you haven't used it before.)
+  → Get started**  if you haven't used it before.)
 - **Platform permissions** `image_picker` needs gallery-access
   permission declared natively:
   - **iOS**: add `NSPhotoLibraryUsageDescription` to `ios/Runner/Info.plist`
@@ -166,7 +166,7 @@ Storage. A few things to know:
   becomes annoying.
 - Flags **denormalize** the student's photo at the moment they're
   created (`studentPhotoUrl` on `StudentFlag`) rather than looking it up
-  live each time — simpler, but it means if a student's photo changes
+  live each time simpler, but it means if a student's photo changes
   later, flags created before that change keep showing the old one.
 
 ## Firestore setup (rules, indexes, seed data)
